@@ -3,12 +3,12 @@ import Image from "next/image"
 
 export function WhoWeAre(): JSX.Element {
   return (
-    <section className="w-full py-[100px]">
+    <section className="w-full pt-[100px]">
       <div className="container-1320 px-4">
         {/* Title with Icon */}
-        <div className="flex items-center gap-3 pb-6">
+        <div className="flex items-center gap-3 pb-4 px-4">
           <Image
-            src="/img/who-we-are/Icon Title.webp"
+            src="/img/who-we-are/IconTitle.svg"
             alt="Who We Are Icon"
             width={36}
             height={430}
@@ -19,10 +19,8 @@ export function WhoWeAre(): JSX.Element {
             Хто ми
           </h2>
         </div>
-        
-        {/* Divider Line */}
+                {/* Divider Line */}
         <div className="w-full border-b border-zinc-200"></div>
-        
         {/* Two Column Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {/* Left Column */}

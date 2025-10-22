@@ -3,79 +3,77 @@ import Image from "next/image"
 
 export function CarAndPartners(): JSX.Element {
   return (
-    <section className="w-full py-[100px]">
-      <div className=" px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left Side - Car Images */}
-          <div className="flex items-center gap-4">
-            {/* Car Parts - to left edge of screen */}
-            <div className="flex-1 -ml-32">
-              <Image
-                src="/img/who-we-are/car-parts.webp"
-                alt="Car Parts"
-                width={600}
-                height={400}
-                quality={100}
-                unoptimized={true}
-                className="w-full h-auto"
-              />
-            </div>
-            
-            {/* Car Diagram - 242px height, centered */}
-            <div className="flex-shrink-0">
-              <Image
-                src="/img/who-we-are/car-diagram.webp"
-                alt="Car Diagram"
-                width={300}
-                height={242}
-                quality={100}
-                unoptimized={true}
-                className="h-[242px] w-auto"
-              />
+    <section className="w-full pt-[40px] pb-[100px]">
+      <div className="container-1320 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-40 items-center">
+          {/* Left Side - Car Images. Full-bleed to the left, ~65vw width */}
+          <div>
+            <div className="w-full lg:w-[59vw] lg:ml-[calc((100vw-1320px)/-2)] flex items-center">
+              {/* Car Parts - touches left viewport edge */}
+              <div className="flex-1">
+                <Image
+                  src="/img/who-we-are/car-parts.webp"
+                  alt="Car Parts"
+                  width={960}
+                  height={600}
+                  quality={100}
+                  unoptimized={true}
+                  className="w-full h-auto"
+                />
+              </div>
+              {/* Car Diagram */}
+              <div className="flex-shrink-0">
+                <Image
+                  src="/img/who-we-are/car-diagram.webp"
+                  alt="Car Diagram"
+                  width={240}
+                  height={420}
+                  quality={100}
+                  unoptimized={true}
+                  className="h-[420px] w-auto"
+                />
+              </div>
             </div>
           </div>
-          
-          {/* Right Side - Partners */}
+
+          {/* Right Side - Partners (stays inside 1320px container) */}
           <div>
-            <h3 className="text-[21px] font-medium leading-[100%] text-[#3B82F6] mb-8" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
+            <h3 className="font-mono font-medium text-[24px] leading-[130%] tracking-[0] text-[#3F3F46] mb-8">
               Офіційний партнер:
             </h3>
-            
-            {/* Logos Stack */}
+            {/* Logos Stack */} 
             <div className="flex flex-col gap-6">
-              <div className="bg-gray-100 rounded-lg p-6 w-full max-w-[300px]">
+              <div className="">
                 <Image
                   src="/img/who-we-are/xenia-logo.webp"
                   alt="Xenia Logo"
-                  width={200}
+                  width={240}
                   height={80}
                   quality={100}
                   unoptimized={true}
-                  className="mx-auto"
+                  className=""
                 />
               </div>
-              
-              <div className="bg-gray-100 rounded-lg p-6 w-full max-w-[300px]">
+              <div className="">
                 <Image
                   src="/img/who-we-are/thermhex-logo.webp"
                   alt="ThermHex Logo"
-                  width={200}
+                  width={240}
                   height={80}
                   quality={100}
                   unoptimized={true}
-                  className="mx-auto"
+                  className=""
                 />
               </div>
-              
-              <div className="bg-gray-100 rounded-lg p-6 w-full max-w-[300px]">
+              <div className="">
                 <Image
                   src="/img/who-we-are/siltex-logo.webp"
                   alt="SILTEX Logo"
-                  width={200}
+                  width={240}
                   height={80}
                   quality={100}
                   unoptimized={true}
-                  className="mx-auto"
+                  className=""
                 />
               </div>
             </div>

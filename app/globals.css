@@ -3,6 +3,14 @@
 @font-face {
   font-family: 'Suisse Intl';
   src: url('/fonts/AnyConv.com__fonnts.com-Suisse_Intl_Bold.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('/fonts/AnyConv.com__fonnts.com-Suisse_Intl_Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -94,4 +102,27 @@ body {
   height: 0;
   border-bottom: 1px solid #BFDBFE;
   z-index: 1;
+}
+
+/* Gradient stroke for cards that respects border-radius */
+.gradient-card {
+  position: relative;
+  border-radius: 16px;
+}
+.gradient-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px; /* stroke width */
+  border-radius: inherit;
+  background: linear-gradient(93.35deg, rgba(107, 171, 250, 0.2) 0%, rgba(23, 62, 171, 0.2) 29.98%, rgba(23, 62, 171, 0.2) 69.95%, rgba(107, 171, 250, 0.2) 99.92%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
 }
