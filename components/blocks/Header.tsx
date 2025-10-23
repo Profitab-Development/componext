@@ -1,7 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { JSX } from "react"
-import { Button } from "@/components/ui/button"
 
 export function Header(): JSX.Element {
   return (
@@ -19,11 +18,12 @@ export function Header(): JSX.Element {
           <a className="font-mono font-medium text-base leading-[130%] text-blue-500 hover:text-white transition-colors" href="#contacts">Контакти</a>
         </nav>
 
-        <Button asChild variant="phone">
-          <a href="tel:+380983800400">
-            +380 98-380-04-00
-          </a>
-        </Button>
+        <a 
+          href="tel:+380983800400"
+          className="px-6 py-3 bg-blue-500 text-white rounded-full font-mono font-medium text-base leading-[130%] hover:bg-blue-600 transition-colors"
+        >
+          +380 98-380-04-00
+        </a>
       </div>
     </header>
   )

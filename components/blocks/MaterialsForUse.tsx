@@ -2,11 +2,9 @@
 
 import type { JSX } from "react"
 import Image from "next/image"
-import { useState } from "react"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 
 export function MaterialsForUse(): JSX.Element {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  
   const cards = [
     {
       icon: "/img/materials-for-use/icon-1.svg",
@@ -30,13 +28,6 @@ export function MaterialsForUse(): JSX.Element {
     }
   ]
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % (cards.length - 2))
-  }
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + (cards.length - 2)) % (cards.length - 2))
-  }
 
   return (
     <section className="w-full py-[100px] relative overflow-hidden">
@@ -75,57 +66,35 @@ export function MaterialsForUse(): JSX.Element {
         </div>
          {/* Slider */}
          <div className="mt-25">
-           {/* Three Cards Display */}
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-             {cards.slice(currentSlide, currentSlide + 3).map((card, index) => (
-               <div 
-                 key={`${currentSlide}-${index}`} 
-                 className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col transition-all duration-500 ease-in-out" 
-                 style={{ boxShadow: 'inset 0px 0px 68px 0px #1D4ED80D, inset 0px 2px 4px 0px #1D4ED81A' }}
-               >
-                 <div className="flex items-center justify-center mb-6">
-                   <Image src={card.icon} alt="Icon" width={56} height={56} unoptimized={true} />
-                 </div>
-                 <h3 className="text-[#3F3F46] text-[16px] font-medium leading-[100%] mb-4 text-center" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
-                   {card.title}
-                 </h3>
-                 <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3" style={{ backgroundColor: '#1E3A8A05' }}>
-                   <p className="font-mono font-medium text-[13px] text-gray-500">
-                     {card.description}
-                   </p>
-                 </div>
-               </div>
-             ))}
-           </div>
-
-           {/* Navigation Arrows */}
-           <div className="flex justify-center items-center gap-4 mt-8">
-             <button 
-               onClick={prevSlide}
-               className="p-2"
-             >
-               <Image 
-                 src="/img/materials-for-use/Icon Arrow.svg" 
-                 alt="Previous" 
-                 width={24} 
-                 height={24}
-                 unoptimized={true}
-               />
-             </button>
-             
-             <button 
-               onClick={nextSlide}
-               className="p-2"
-             >
-               <Image 
-                 src="/img/materials-for-use/Icon Arrow-1.svg" 
-                 alt="Next" 
-                 width={24} 
-                 height={24}
-                 unoptimized={true}
-               />
-             </button>
-           </div>
+           <Carousel
+             opts={{
+               align: "start",
+             }}
+             className="w-full"
+           >
+             <CarouselContent className="-ml-2 md:-ml-4">
+               {cards.map((card, index) => (
+                 <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                   <div className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full" 
+                        style={{ boxShadow: 'inset 0px 0px 68px 0px #1D4ED80D, inset 0px 2px 4px 0px #1D4ED81A' }}>
+                     <div className="flex items-center justify-center mb-6">
+                       <Image src={card.icon} alt="Icon" width={56} height={56} unoptimized={true} />
+                     </div>
+                     <h3 className="text-[#3F3F46] text-[16px] font-medium leading-[100%] mb-4 text-center" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
+                       {card.title}
+                     </h3>
+                     <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3" style={{ backgroundColor: '#1E3A8A05' }}>
+                       <p className="font-mono font-medium text-[13px] text-gray-500">
+                         {card.description}
+                       </p>
+                     </div>
+                   </div>
+                 </CarouselItem>
+               ))}
+             </CarouselContent>
+             <CarouselPrevious />
+             <CarouselNext />
+           </Carousel>
          </div>
       </div>
     </section>
