@@ -15,7 +15,6 @@ export const Applications = memo(() => {
             alt="Applications Icon"
             width={36}
             height={36}
-            quality={75}
             unoptimized={true}
           />
           <h2 

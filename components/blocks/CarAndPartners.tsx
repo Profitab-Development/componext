@@ -16,8 +16,7 @@ export function CarAndPartners(): JSX.Element {
                   alt="Car Parts"
                   width={960}
                   height={600}
-                  quality={75}
-                  unoptimized={true}
+            unoptimized={true}
                   className="w-full h-auto"
                 />
               </div>
@@ -28,8 +27,7 @@ export function CarAndPartners(): JSX.Element {
                   alt="Car Diagram"
                   width={240}
                   height={420}
-                  quality={75}
-                  unoptimized={true}
+            unoptimized={true}
                   className="h-[420px] w-auto"
                 />
               </div>
@@ -49,8 +47,7 @@ export function CarAndPartners(): JSX.Element {
                   alt="Xenia Logo"
                   width={240}
                   height={80}
-                  quality={75}
-                  unoptimized={true}
+            unoptimized={true}
                   className=""
                 />
               </div>
@@ -60,8 +57,7 @@ export function CarAndPartners(): JSX.Element {
                   alt="ThermHex Logo"
                   width={240}
                   height={80}
-                  quality={75}
-                  unoptimized={true}
+            unoptimized={true}
                   className=""
                 />
               </div>
@@ -71,8 +67,7 @@ export function CarAndPartners(): JSX.Element {
                   alt="SILTEX Logo"
                   width={240}
                   height={80}
-                  quality={75}
-                  unoptimized={true}
+            unoptimized={true}
                   className=""
                 />
               </div>

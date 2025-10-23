@@ -90,7 +90,7 @@ export const Industries = memo(() => {
           fill
           className="object-cover"
           sizes="100vw"
-          quality={75}
+          unoptimized={true}
         />
       </div>
 
@@ -102,7 +102,6 @@ export const Industries = memo(() => {
             alt="Industries Icon"
             width={36}
             height={36}
-            quality={75}
             unoptimized
           />
           <h2 

@@ -12,7 +12,7 @@ export function Benefits(): JSX.Element {
           fill
           className="object-cover"
           sizes="100vw"
-          quality={75}
+          unoptimized={true}
         />
       </div>
 
@@ -24,7 +24,6 @@ export function Benefits(): JSX.Element {
             alt="Benefits Icon"
             width={36}
             height={36}
-            quality={75}
             unoptimized={true}
           />
           <h2 className="text-[21px] font-medium leading-[100%] text-center text-[#3B82F6]" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
