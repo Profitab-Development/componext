@@ -13,8 +13,7 @@ export function Hero(): JSX.Element {
           className="object-cover"
           priority
           sizes="100vw"
-          quality={95}
-          unoptimized={false}
+          quality={75}
         />
       </div>
       
@@ -37,7 +36,7 @@ export function Hero(): JSX.Element {
             alt="Xenia Logo"
             width={113}
             height={34}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
           <Image
@@ -45,7 +44,7 @@ export function Hero(): JSX.Element {
             alt="Thermex Logo"
             width={150}
             height={43}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
           <Image
@@ -53,7 +52,7 @@ export function Hero(): JSX.Element {
             alt="SILTEX Logo"
             width={114}
             height={30}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
         </div>

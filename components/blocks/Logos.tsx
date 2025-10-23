@@ -12,7 +12,7 @@ export function Logos(): JSX.Element {
             alt="Xenia Logo"
             width={234}
             height={66}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
           <Image
@@ -20,7 +20,7 @@ export function Logos(): JSX.Element {
             alt="Thermex Logo"
             width={242}
             height={69}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
           <Image
@@ -28,7 +28,7 @@ export function Logos(): JSX.Element {
             alt="SILTEX Logo"
             width={234}
             height={62}
-            quality={100}
+            quality={75}
             unoptimized={true}
           />
         </div>
