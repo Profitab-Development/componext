@@ -2,29 +2,79 @@
 
 import type { JSX } from "react"
 import Image from "next/image"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import useEmblaCarousel from "embla-carousel-react"
+import { useState, useEffect } from "react"
 
 export function MaterialsForUse(): JSX.Element {
+  const [currentSlide, setCurrentSlide] = useState(1) // Починаємо з другого слайда (індекс 1)
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    align: 'center', // Вирівнювання по центру
+    skipSnaps: false,
+    dragFree: false,
+    startIndex: 1 // Починаємо з другого слайда
+  })
+
+  const scrollPrev = () => {
+    if (emblaApi) {
+      emblaApi.scrollPrev()
+    }
+  }
+
+  const scrollNext = () => {
+    if (emblaApi) {
+      emblaApi.scrollNext()
+    }
+  }
+
+  useEffect(() => {
+    if (emblaApi) {
+      const onSelect = () => {
+        const selectedIndex = emblaApi.selectedScrollSnap()
+        setCurrentSlide(selectedIndex)
+      }
+      
+      emblaApi.on('select', onSelect)
+      
+      // Встановлюємо початковий слайд в центр
+      emblaApi.scrollTo(1, false)
+      onSelect() // Set initial slide
+      
+      return () => {
+        emblaApi.off('select', onSelect)
+      }
+    }
+  }, [emblaApi])
+
   const cards = [
     {
-      icon: "/img/materials-for-use/icon-1.svg",
-      title: "Ексклюзивне партнерство",
-      description: "Офіційний імпортер Xenia, Siltex, ThermHex та інших брендів в Україні — гарантія оригінальної продукції та вигідних умов постачання."
+      image: "/img/materials-for-use/Image Frame.webp",
+      title: "XECARB 3DP",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     },
     {
-      icon: "/img/materials-for-use/icon-2.svg",
-      title: "Інженерна підтримка на всіх етапах",
-      description: "Консультації та допомога в підборі матеріалів для конкретного проєкту дозволяють скоротити час на випробування і запуск виробництва до 50%."
+      image: "/img/materials-for-use/Image Frame1.webp",
+      title: "Термопластичні еластомери",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     },
     {
-      icon: "/img/materials-for-use/icon-3.svg",
-      title: "Комплексні рішення під ключ",
-      description: "Матеріали, верстати, технології, інструменти для обробки — все в одному місці. Забезпечуємо повний супровід: від ідеї до готового виробу."
+      image: "/img/materials-for-use/Image Frame2.webp",
+      title: "Вуглецеве волокно",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+    },{
+      image: "/img/materials-for-use/Image Frame.webp",
+      title: "XECARB 3DP",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     },
     {
-      icon: "/img/materials-for-use/icon-4.svg",
-      title: "Реальні результати",
-      description: "Вироби виходять легші, міцніші та економічніші: економія сировини до 50%, скорочення часу виробництва вдвічі, підвищення конкурентоспроможності готової продукції."
+      image: "/img/materials-for-use/Image Frame1.webp",
+      title: "Термопластичні еластомери",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame2.webp",
+      title: "Вуглецеве волокно",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     }
   ]
 
@@ -65,36 +115,75 @@ export function MaterialsForUse(): JSX.Element {
           </p>
         </div>
          {/* Slider */}
-         <div className="mt-25">
-           <Carousel
-             opts={{
-               align: "start",
-             }}
-             className="w-full"
-           >
-             <CarouselContent className="-ml-2 md:-ml-4">
-               {cards.map((card, index) => (
-                 <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                   <div className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full" 
-                        style={{ boxShadow: 'inset 0px 0px 68px 0px #1D4ED80D, inset 0px 2px 4px 0px #1D4ED81A' }}>
-                     <div className="flex items-center justify-center mb-6">
-                       <Image src={card.icon} alt="Icon" width={56} height={56} unoptimized={true} />
-                     </div>
-                     <h3 className="text-[#3F3F46] text-[16px] font-medium leading-[100%] mb-4 text-center" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
+         <div className="mt-15">
+           <div className="embla overflow-hidden" ref={emblaRef}>
+             <div className="embla__container flex">
+               {cards.map((card, index) => {
+                 const isCurrentSlide = index === currentSlide
+                 const shouldBlur = !isCurrentSlide // Блюримо всі слайди, крім поточного
+                 
+                 return (
+                   <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-5">
+                     <div 
+                       className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full shadow-[inset_0px_0px_68px_0px_#1D4ED80D,inset_0px_2px_4px_0px_#1D4ED81A] transition-all duration-300"
+                       style={shouldBlur ? { filter: 'blur(4px)' } : {}}
+                     >
+                       <div className="w-full mb-6">
+                         <Image 
+                           src={card.image} 
+                           alt="Material" 
+                           width={394} 
+                           height={240} 
+                           className="w-full h-[240px] rounded-md object-cover"
+                           unoptimized={true} 
+                         />
+                       </div>
+                       {/* Divider */}
+                       <div className="mb-4 w-12 h-0 border-1 border-solid border-blue-500 mx-auto" />
+                     <h3 className="text-[#3F3F46] text-[18px] font-medium leading-[100%] mb-4 text-center font-['Suisse_Intl',system-ui,sans-serif]">
                        {card.title}
                      </h3>
-                     <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3" style={{ backgroundColor: '#1E3A8A05' }}>
-                       <p className="font-mono font-medium text-[13px] text-gray-500">
+                     <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3 bg-[#1E3A8A05]">
+                       <p className="font-mono font-medium text-[16px] text-gray-500 text-center">
                          {card.description}
                        </p>
                      </div>
                    </div>
-                 </CarouselItem>
-               ))}
-             </CarouselContent>
-             <CarouselPrevious />
-             <CarouselNext />
-           </Carousel>
+                 </div>
+                 )
+               })}
+             </div>
+           </div>
+           
+           {/* Custom Navigation */}
+           <div className="flex justify-center mt-15">
+             <div className="flex items-center w-[152px] h-[56px] gap-[40px] rounded-xl border border-[#60A5FA] py-2 px-4 bg-[#BFDBFE]">
+               <button 
+                 onClick={scrollPrev}
+                 className=" hover:scale-110 transition-transform duration-200"
+               >
+                 <Image 
+                   src="/img/materials-for-use/Icon Arrow.svg" 
+                   alt="Previous" 
+                   width={40} 
+                   height={40} 
+                   className="w-10 h-10"
+                 />
+               </button>
+               <button 
+                 onClick={scrollNext}
+                 className=" hover:scale-110 transition-transform duration-200"
+               >
+                 <Image 
+                   src="/img/materials-for-use/Icon Arrow-1.svg" 
+                   alt="Next" 
+                   width={40} 
+                   height={40} 
+                   className="w-10 h-10"
+                 />
+               </button>
+             </div>
+           </div>
          </div>
       </div>
     </section>
