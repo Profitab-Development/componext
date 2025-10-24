@@ -42,7 +42,7 @@ export const Contacts = memo(() => {
         <div className="w-full border-b border-zinc-200"></div>
         
         {/* Two Column Content */}
-        <div className="mt-15 grid grid-cols-1 lg:grid-cols-2 gap-15">
+        <div className="my-15 grid grid-cols-1 lg:grid-cols-2 gap-15">
           {/* Left Column - Main Text */}
           <div className="flex items-center">
             <h3 

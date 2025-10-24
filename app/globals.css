@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'react-phone-number-input/style.css';
 
 @font-face {
   font-family: 'Suisse Intl';
@@ -125,4 +126,17 @@ body {
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   pointer-events: none;
+}
+
+/* Remove focus outline from phone input */
+.PhoneInputInput:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.PhoneInputInput {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
