@@ -77,20 +77,16 @@ export function ContactForm() {
 
   return (
     <div className="flex justify-center">
-      <div className="w-[900px] bg-white rounded-md p-8 flex flex-col gap-10">
+      <div className="w-[1320px]">
+        <div className="w-[900px] mx-auto bg-white rounded-md p-8 flex flex-col gap-10">
         <h4
           className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
           style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
         >
-          Заявка на консультацію
+          Форма зворотного звʼязку
         </h4>
         
-        <p
-          className="text-[14px] text-[#71717A] text-center"
-          style={{ fontFamily: "Roboto Mono, monospace" }}
-        >
-          Наш менеджер перетелефонує Вам якнайшвидше
-        </p>
+        
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 flex-1">
           {/* Name Field */}
@@ -102,33 +98,61 @@ export function ContactForm() {
             >
               Ім&apos;я
             </label>
-            <input
-              type="text"
-              id="name"
-              placeholder="Введіть ваше ім'я"
-              className="w-full px-3 py-3 rounded-lg focus:outline-none transition-all text-[#71717A] text-[14px] leading-6"
-              style={{ 
-                fontFamily: "Roboto Mono, monospace",
-                ...getNameInputStyle()
-              }}
-              onFocus={() => setIsBlurredName(true)}
-              autoComplete="off"
-              {...register('name', {
-                required: "Ім'я обов'язкове",
-                minLength: {
-                  value: 2,
-                  message: "Ім'я має бути мінімум 2 символи"
-                },
-                maxLength: {
-                  value: 30,
-                  message: "Ім'я має бути максимум 30 символів"
-                },
-                pattern: {
-                  value: /^[а-яА-Яa-zA-Z\s]+$/,
-                  message: "Ім'я може містити тільки літери"
-                }
-              })}
-            />
+            <div className="relative">
+              {/* Person Icon */}
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-[#71717A]"
+                >
+                  <path
+                    d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="name"
+                placeholder="Уведіть своє імʼя"
+                className="w-full pl-10 pr-3 py-3 rounded-lg focus:outline-none transition-all text-[#71717A] text-[14px] leading-6"
+                style={{ 
+                  fontFamily: "Roboto Mono, monospace",
+                  ...getNameInputStyle()
+                }}
+                onFocus={() => setIsBlurredName(true)}
+                autoComplete="off"
+                {...register('name', {
+                  required: "Ім'я обов'язкове",
+                  minLength: {
+                    value: 2,
+                    message: "Ім'я має бути мінімум 2 символи"
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Ім'я має бути максимум 30 символів"
+                  },
+                  pattern: {
+                    value: /^[а-яА-Яa-zA-Z\s]+$/,
+                    message: "Ім'я може містити тільки літери"
+                  }
+                })}
+              />
+            </div>
             {errors.name && (
               <p className="mt-1 text-sm text-red-500">
                 {errors.name.message as string}
@@ -196,10 +220,11 @@ export function ContactForm() {
               }`}
               style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
             >
-              {isSubmitting ? "Відправляємо..." : "Отримати консультацію"}
+              {isSubmitting ? "Відправляємо..." : "Надіслати запит"}
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   )

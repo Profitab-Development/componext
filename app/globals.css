@@ -140,3 +140,19 @@ body {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* Contact buttons styling */
+.contact-btn {
+  transition: all 0.3s ease-in-out;
+  background: radial-gradient(114.5% 631.89% at 50% 50%, #F2F6FA 25.28%, #93C5FD 100%);
+  border: 1px solid #DBEAFE;
+}
+
+.contact-btn:hover .arrow-icon {
+  transform: translateX(4px);
+  transition: transform 0.3s ease-in-out;
+}
+
+.arrow-icon {
+  transition: transform 0.3s ease-in-out;
+}

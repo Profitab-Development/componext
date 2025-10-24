@@ -66,6 +66,137 @@ export const Contacts = memo(() => {
         
         {/* Contact Form */}
         <ContactForm />
+
+        {/* Contact Buttons */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
+          {/* Phone Button */}
+          <a 
+            href="tel:+380983800400"
+            className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
+          >
+            <div className="flex items-center gap-3">
+              <img 
+                src="/img/contacts/Icon Frame.svg" 
+                alt="Phone" 
+                className="w-6 h-6"
+              />
+              <span 
+                className="text-[#083660]"
+                style={{ 
+                  fontFamily: "Roboto Mono, monospace",
+                  fontWeight: 400,
+                  fontSize: "17px",
+                  lineHeight: "100%",
+                  letterSpacing: "0%"
+                }}
+              >
+                Номер телефону
+              </span>
+            </div>
+            <img 
+              src="/img/contacts/Vector.svg" 
+              alt="Arrow" 
+              className="arrow-icon w-4 h-4"
+            />
+          </a>
+
+          {/* Email Button */}
+          <a 
+            href="mailto:info@example.com"
+            className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
+          >
+            <div className="flex items-center gap-3">
+              <img 
+                src="/img/contacts/Icon Frame-1.svg" 
+                alt="Email" 
+                className="w-6 h-6"
+              />
+              <span 
+                className="text-[#083660]"
+                style={{ 
+                  fontFamily: "Roboto Mono, monospace",
+                  fontWeight: 400,
+                  fontSize: "17px",
+                  lineHeight: "100%",
+                  letterSpacing: "0%"
+                }}
+              >
+                Електронна пошта
+              </span>
+            </div>
+            <img 
+              src="/img/contacts/Vector.svg" 
+              alt="Arrow" 
+              className="arrow-icon w-4 h-4"
+            />
+          </a>
+
+          {/* WhatsApp Button */}
+          <a 
+            href="https://wa.me/380983800400"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
+          >
+            <div className="flex items-center gap-3">
+              <img 
+                src="/img/contacts/Icon Frame-2.svg" 
+                alt="WhatsApp" 
+                className="w-6 h-6"
+              />
+              <span 
+                className="text-[#083660]"
+                style={{ 
+                  fontFamily: "Roboto Mono, monospace",
+                  fontWeight: 400,
+                  fontSize: "17px",
+                  lineHeight: "100%",
+                  letterSpacing: "0%"
+                }}
+              >
+                WhatsApp
+              </span>
+            </div>
+            <img 
+              src="/img/contacts/Vector.svg" 
+              alt="Arrow" 
+              className="arrow-icon w-4 h-4"
+            />
+          </a>
+
+          {/* Telegram Button */}
+          <a 
+            href="https://t.me/your_username"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
+          >
+            <div className="flex items-center gap-3">
+              <img 
+                src="/img/contacts/Icon Frame-3.svg" 
+                alt="Telegram" 
+                className="w-6 h-6"
+              />
+              <span 
+                className="text-[#083660]"
+                style={{ 
+                  fontFamily: "Roboto Mono, monospace",
+                  fontWeight: 400,
+                  fontSize: "17px",
+                  lineHeight: "100%",
+                  letterSpacing: "0%"
+                }}
+              >
+                Telegram
+              </span>
+            </div>
+            <img 
+              src="/img/contacts/Vector.svg" 
+              alt="Arrow" 
+              className="arrow-icon w-4 h-4"
+            />
+          </a>
+        </div>
       </div>
     </section>
   )
