@@ -2,41 +2,111 @@
 
 import type { JSX } from "react"
 import Image from "next/image"
-import { useState } from "react"
+import useEmblaCarousel from "embla-carousel-react"
+import { useState, useEffect } from "react"
 
 export function MaterialsForUse(): JSX.Element {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  
+  const [currentSlide, setCurrentSlide] = useState(1) // Починаємо з другого слайда (індекс 1)
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    align: 'center', // Вирівнювання по центру
+    skipSnaps: false,
+    dragFree: false,
+    startIndex: 1 // Починаємо з другого слайда
+  })
+
+  const scrollPrev = () => {
+    if (emblaApi) {
+      emblaApi.scrollPrev()
+    }
+  }
+
+  const scrollNext = () => {
+    if (emblaApi) {
+      emblaApi.scrollNext()
+    }
+  }
+
+  useEffect(() => {
+    if (emblaApi) {
+      const onSelect = () => {
+        const selectedIndex = emblaApi.selectedScrollSnap()
+        setCurrentSlide(selectedIndex)
+      }
+      
+      emblaApi.on('select', onSelect)
+      
+      // Встановлюємо початковий слайд в центр
+      emblaApi.scrollTo(1, false)
+      onSelect() // Set initial slide
+      
+      return () => {
+        emblaApi.off('select', onSelect)
+      }
+    }
+  }, [emblaApi])
+
   const cards = [
     {
-      icon: "/img/materials-for-use/icon-1.svg",
-      title: "Ексклюзивне партнерство",
-      description: "Офіційний імпортер Xenia, Siltex, ThermHex та інших брендів в Україні — гарантія оригінальної продукції та вигідних умов постачання."
+      image: "/img/materials-for-use/Image Frame.webp",
+      title: "XECARB 3DP",
+      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     },
     {
-      icon: "/img/materials-for-use/icon-2.svg",
-      title: "Інженерна підтримка на всіх етапах",
-      description: "Консультації та допомога в підборі матеріалів для конкретного проєкту дозволяють скоротити час на випробування і запуск виробництва до 50%."
+      image: "/img/materials-for-use/Image Frame1.webp",
+      title: "Термопластичні еластомери",
+      description: "До 65% скловолокон; жорсткість і довговічність."
     },
     {
-      icon: "/img/materials-for-use/icon-3.svg",
-      title: "Комплексні рішення під ключ",
-      description: "Матеріали, верстати, технології, інструменти для обробки — все в одному місці. Забезпечуємо повний супровід: від ідеї до готового виробу."
+      image: "/img/materials-for-use/Image Frame2.webp",
+      title: "Вуглецеве волокно",
+      description: "Поєднання карбонових і скловолокон; легкість і жорсткість + ударостійкість."
+    },{
+      image: "/img/materials-for-use/Image Frame4.webp",
+      title: "XEGREEN 3DP",
+      description: "Екологічні композити з перероблених полімерів."
     },
     {
-      icon: "/img/materials-for-use/icon-4.svg",
-      title: "Реальні результати",
-      description: "Вироби виходять легші, міцніші та економічніші: економія сировини до 50%, скорочення часу виробництва вдвічі, підвищення конкурентоспроможності готової продукції."
-    }
+      image: "/img/materials-for-use/Image Frame-1.webp",
+      title: "XECARB HM 3DP",
+      description: "Високомодульне карбонове волокно для підвищеної міцності."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-2.webp",
+      title: "XECARB SL 3DP",
+      description: "Надлегкі матеріали для дронів і робототехніки."
+    },{
+      image: "/img/materials-for-use/Image Frame-3.webp",
+      title: "XECARB ST 3DP",
+      description: "Надміцні композити для високих навантажень."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-4.webp",
+      title: "XELIGHT 3DP",
+      description: "Легкі й еластичні рішення для спорту та мобільності."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-5.webp",
+      title: "XERAMIC 3DP",
+      description: "Керамічні наповнювачі для теплопровідності й зносостійкості."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-6.webp",
+      title: "XEGREEN BIO 3DP",
+      description: "Біо- та рециклінг-лінійка з відновлюваної сировини."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-7.webp",
+      title: "Гібридні тканини",
+      description: "Поєднання карбону, скла та араміду для балансу характеристик."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-8.webp",
+      title: "Сотові панелі ThermHex",
+      description: "Низька вага при високій жорсткості."
+    },
   ]
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % (cards.length - 2))
-  }
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + (cards.length - 2)) % (cards.length - 2))
-  }
 
   return (
     <section className="w-full py-[100px] relative overflow-hidden">
@@ -74,57 +144,74 @@ export function MaterialsForUse(): JSX.Element {
           </p>
         </div>
          {/* Slider */}
-         <div className="mt-25">
-           {/* Three Cards Display */}
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-             {cards.slice(currentSlide, currentSlide + 3).map((card, index) => (
-               <div 
-                 key={`${currentSlide}-${index}`} 
-                 className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col transition-all duration-500 ease-in-out" 
-                 style={{ boxShadow: 'inset 0px 0px 68px 0px #1D4ED80D, inset 0px 2px 4px 0px #1D4ED81A' }}
-               >
-                 <div className="flex items-center justify-center mb-6">
-                   <Image src={card.icon} alt="Icon" width={56} height={56} unoptimized={true} />
+         <div className="mt-15">
+           <div className="embla overflow-hidden" ref={emblaRef}>
+             <div className="embla__container flex">
+               {cards.map((card, index) => {
+                 const isCurrentSlide = index === currentSlide
+                 const shouldBlur = !isCurrentSlide // Блюримо всі слайди, крім поточного
+                 
+                 return (
+                   <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-5">
+                     <div 
+                       className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full shadow-[inset_0px_0px_68px_0px_#1D4ED80D,inset_0px_2px_4px_0px_#1D4ED81A] transition-all duration-300"
+                       style={shouldBlur ? { filter: 'blur(4px)' } : {}}
+                     >
+                       <div className="w-full mb-6">
+                         <Image 
+                           src={card.image} 
+                           alt="Material" 
+                           width={394} 
+                           height={240} 
+                           className="w-full h-[240px] rounded-md object-cover"
+                           unoptimized={true} 
+                         />
+                       </div>
+                       {/* Divider */}
+                       <div className="mb-4 w-12 h-0 border-1 border-solid border-blue-500 mx-auto" />
+                     <h3 className="text-[#3F3F46] text-lg font-medium tracking-[0%] mb-4 text-center font-mono">
+                       {card.title}
+                     </h3>
+                     <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3 bg-[#1E3A8A05]">
+                      <p className="font-mono font-medium text-base  tracking-[0%] text-gray-500 text-center">
+                        {card.description}
+                      </p>
+                     </div>
+                   </div>
                  </div>
-                 <h3 className="text-[#3F3F46] text-[16px] font-medium leading-[100%] mb-4 text-center" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
-                   {card.title}
-                 </h3>
-                 <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3" style={{ backgroundColor: '#1E3A8A05' }}>
-                   <p className="font-mono font-medium text-[13px] text-gray-500">
-                     {card.description}
-                   </p>
-                 </div>
-               </div>
-             ))}
+                 )
+               })}
+             </div>
            </div>
-
-           {/* Navigation Arrows */}
-           <div className="flex justify-center items-center gap-4 mt-8">
-             <button 
-               onClick={prevSlide}
-               className="p-2"
-             >
-               <Image 
-                 src="/img/materials-for-use/Icon Arrow.svg" 
-                 alt="Previous" 
-                 width={24} 
-                 height={24}
-                 unoptimized={true}
-               />
-             </button>
-             
-             <button 
-               onClick={nextSlide}
-               className="p-2"
-             >
-               <Image 
-                 src="/img/materials-for-use/Icon Arrow-1.svg" 
-                 alt="Next" 
-                 width={24} 
-                 height={24}
-                 unoptimized={true}
-               />
-             </button>
+           
+           {/* Custom Navigation */}
+           <div className="flex justify-center mt-15">
+             <div className="flex items-center w-[152px] h-[56px] gap-[40px] rounded-xl border border-[#60A5FA] py-2 px-4 bg-[#BFDBFE]">
+               <button 
+                 onClick={scrollPrev}
+                 className="cursor-pointer hover:scale-110 transition-transform duration-200"
+               >
+                 <Image 
+                   src="/img/materials-for-use/Icon Arrow.svg" 
+                   alt="Previous" 
+                   width={40} 
+                   height={40} 
+                   className="w-10 h-10"
+                 />
+               </button>
+               <button 
+                 onClick={scrollNext}
+                 className="cursor-pointer hover:scale-110 transition-transform duration-200"
+               >
+                 <Image 
+                   src="/img/materials-for-use/Icon Arrow-1.svg" 
+                   alt="Next" 
+                   width={40} 
+                   height={40} 
+                   className="w-10 h-10"
+                 />
+               </button>
+             </div>
            </div>
          </div>
       </div>

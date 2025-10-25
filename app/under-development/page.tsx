@@ -42,7 +42,7 @@ export default function UnderDevelopment() {
   `}
           style={{ fontFamily: 'var(--font-roboto-mono)' }}
         >
-          Site under development!
+          Сайт в розробці!
           <span className="corner-bl"></span>
           <span className="corner-br"></span>
           <span className="bottom-line"></span>

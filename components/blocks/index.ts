@@ -8,5 +8,7 @@ export * from "./Materials"
 export * from "./Industries"
 export * from "./Applications"
 export * from "./MaterialsForUse"
+export * from "./Contacts"
+export * from "./Footer"
 
 

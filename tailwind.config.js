@@ -8,9 +8,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['var(--font-roboto-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        'suisse': ['var(--font-suisse)', 'Inter', 'system-ui', 'sans-serif'],
-        'mono': ['var(--font-roboto-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        'sans': ['var(--font-suisse)'],
+        'suisse': ['var(--font-suisse)'],
+        'mono': ['Roboto Mono', 'var(--font-roboto-mono)', 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', 'monospace'],
+        'montserrat': ['Montserrat', 'var(--font-montserrat)', 'sans-serif'],
       },
     },
   },

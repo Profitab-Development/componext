@@ -1,12 +1,17 @@
 import React, { type ReactNode, type JSX } from "react";
 import type { Metadata } from "next";
+import { Roboto_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
-import { Roboto_Mono } from "next/font/google"
 
 const robotoMono = Roboto_Mono({
-  weight: ["400", "500", "700"],
   subsets: ["latin"],
   variable: "--font-roboto-mono",
+  display: 'swap',
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
   display: 'swap',
 });
 
@@ -17,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
     <html lang="en">
-      <body suppressHydrationWarning className={`${robotoMono.variable} antialiased`}>
+      <body suppressHydrationWarning className={`${robotoMono.variable} ${montserrat.variable} antialiased`}>
         {children}
       </body>
     </html>
