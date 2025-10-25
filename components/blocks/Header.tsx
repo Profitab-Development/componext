@@ -7,7 +7,7 @@ export function Header(): JSX.Element {
     <header className="w-full bg-transparent absolute top-0 left-0 right-0 z-50">
       <div className="container-1320 px-4 h-16 flex items-center justify-between pt-[28px]">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" width={190} height={45} alt="Logo" priority />
+          <Image src="/Logo.svg" width={190} height={45} alt="Logo" priority />
         </Link>
 
         <nav className="hidden md:flex h-[51px] rounded-full border border-blue-200/20 bg-black/[0.03] backdrop-blur-sm shadow-[inset_0_0_68px_0_rgba(29,78,216,0.05),inset_0_2px_4px_0_rgba(29,78,216,0.1)] px-7 py-3 gap-9 items-center justify-center text-gray-700 fixed top-[20px] left-1/2 transform -translate-x-1/2 z-50">
