@@ -1,0 +1,85 @@
+name: Deploying a Next.js app build
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - .github/workflows/**
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+        
+    - name: Install dependencies and build project
+      run: |
+        npm install
+        npm run build
+
+    - name: Archive Build Folder
+      run: |
+        tar -czvf build.tar.gz -C out .
+    
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.PROD_FTP_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Upload Build Archive to Server
+      run: |
+        scp build.tar.gz ${{ secrets.PROD_FTP_LOGIN }}@${{ secrets.PROD_FTP_HOST }}:${{ secrets.PROD_FTP_PATH }}
+    
+    - name: Clear the site folder and extract the build archive on the server
+      run: |
+        ssh -T ${{ secrets.PROD_FTP_LOGIN }}@${{ secrets.PROD_FTP_HOST }} << 'EOF'
+          cd ${{ secrets.PROD_FTP_PATH }}
+          find . -mindepth 1 ! -name '.htaccess' ! -name 'build.tar.gz' -delete
+          tar -xzvf build.tar.gz
+          rm build.tar.gz
+        EOF
+    
+    - name: Notify Telegram
+      if: always()
+      env:
+        TELEGRAM_TOKEN: ${{ secrets.TG_NOTIFY_BOT_TOKEN }}
+        CHAT_ID: ${{ secrets.TG_NOTIFY_CHAT_ID }}
+        MESSAGE_THREAD_ID: ${{ secrets.TG_NOTIFY_CHAT_THREAD_ID }}
+        PROJECT_NAME: ${{ github.repository }}
+        BRANCH_NAME: ${{ github.ref_name }}
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        COMMIT_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+        JOB_STATUS: ${{ job.status }}
+        WEBSITE_URL: ${{ secrets.PROD_SITE_URL }}
+      run: |
+        if [[ "${JOB_STATUS}" == "success" ]]; then
+          TITLE="🚀 Деплой успішно завершено!"
+        elif [[ "${JOB_STATUS}" == "failure" ]]; then
+          TITLE="❌ Деплой завершився з помилкою!"
+        elif [[ "${JOB_STATUS}" == "cancelled" ]]; then
+          TITLE="⚠️ Деплой скасовано!"
+        fi
+    
+        RAW_TIMESTAMP=${COMMIT_TIMESTAMP}
+        export TZ="Europe/Kyiv"
+        STYLED_TIMESTAMP=$(date -d "${RAW_TIMESTAMP}" "+%d.%m.%Y о %H:%M")
+        PROJECT_SHORT_NAME=$(basename "${PROJECT_NAME}")
+        TEXT="<blockquote>${TITLE}</blockquote>%0A🛠️ <b>Репо:</b> ${PROJECT_SHORT_NAME} (🌿 ${BRANCH_NAME})%0A✏️ <b>Коміт:</b> ${COMMIT_MESSAGE} (від ${STYLED_TIMESTAMP})%0A🌐 <b>Сайт:</b> <a href='https://${WEBSITE_URL}'>${WEBSITE_URL}</a>"
+        
+        curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \
+        -d chat_id=${CHAT_ID} \
+        -d message_thread_id=${MESSAGE_THREAD_ID} \
+        -d parse_mode="HTML" \
+        -d disable_web_page_preview=true \
+        -d text="${TEXT}"
