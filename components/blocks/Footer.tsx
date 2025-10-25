@@ -25,7 +25,7 @@ export function Footer() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 mb-25">
             <Image 
-              src="/logo.svg" 
+              src="/Logo.svg" 
               width={190} 
               height={45} 
               alt="Logo" 
