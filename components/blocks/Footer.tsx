@@ -3,12 +3,27 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="w-full bg-white border-t border-gray-200 py-12">
-      <div className="container-1320 px-4">
+    <footer className="w-full py-15 relative overflow-hidden  ">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/img/footer/Footer.webp"
+          alt="Footer Background"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          unoptimized={true}
+        />
+      </div>
+
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/20 z-0"></div>
+
+      <div className="relative z-10 container-1320 px-4">
         {/* Main Footer Content */}
-        <div className="flex flex-col items-center text-center space-y-8">
+        <div className="flex flex-col items-center text-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 mb-25">
             <Image 
               src="/logo.svg" 
               width={190} 
@@ -20,54 +35,48 @@ export function Footer() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex flex-wrap justify-center gap-6 md:gap-8">
+          <nav className="flex flex-wrap justify-center gap-6 md:gap-12">
             <a 
               href="#who-we-are" 
-              className="font-mono font-medium text-base leading-[130%] text-gray-700 hover:text-blue-500 transition-colors"
+              className="font-mono font-medium text-base leading-[130%] text-center text-gray-600 hover:text-blue-500 transition-colors scroll-smooth"
             >
               Хто ми
             </a>
             <a 
               href="#materials" 
-              className="font-mono font-medium text-base leading-[130%] text-gray-700 hover:text-blue-500 transition-colors"
+              className="font-mono font-medium text-base leading-[130%] text-center text-gray-600 hover:text-blue-500 transition-colors scroll-smooth"
             >
-              Матеріали
+              Послуги
             </a>
             <a 
               href="#partners" 
-              className="font-mono font-medium text-base leading-[130%] text-gray-700 hover:text-blue-500 transition-colors"
+              className="font-mono font-medium text-base leading-[130%] text-center text-gray-600 hover:text-blue-500 transition-colors scroll-smooth"
             >
-              Партнери
+              Відгуки
             </a>
-            <a 
-              href="#industries" 
-              className="font-mono font-medium text-base leading-[130%] text-gray-700 hover:text-blue-500 transition-colors"
-            >
-              Галузі
-            </a>
+            
             <a 
               href="#contacts" 
-              className="font-mono font-medium text-base leading-[130%] text-gray-700 hover:text-blue-500 transition-colors"
+              className="font-mono font-medium text-base leading-[130%] text-center text-gray-600 hover:text-blue-500 transition-colors scroll-smooth"
             >
               Контакти
             </a>
           </nav>
 
-          {/* Phone Link */}
-          <a 
-            href="tel:+380983800400"
-            className="px-6 py-3 bg-blue-500 text-white rounded-full font-mono font-medium text-base leading-[130%] hover:bg-blue-600 transition-colors"
-          >
-            +380 98-380-04-00
-          </a>
-
-          {/* Divider Line */}
-          <div className="w-full max-w-2xl border-b border-gray-200"></div>
-
+         
           {/* Copyright */}
-          <p className="text-sm text-gray-500 font-mono">
-            Designed and Developed by
-          </p>
+          <div className="flex items-center gap-2 text-xs leading-6 tracking-[0.2px] text-zinc-500 font-medium font-montserrat mt-10">
+            <span>Designed and Developed by</span>
+            <Image 
+              src="/img/footer/logomark.svg" 
+              alt="Logomark" 
+              width={20} 
+              height={20} 
+              className="w-5 h-5"
+            />
+            <span className="underline">Profitab</span>
+            <span>in Ukraine</span>
+          </div>
         </div>
       </div>
     </footer>

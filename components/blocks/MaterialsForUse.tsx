@@ -55,27 +55,56 @@ export function MaterialsForUse(): JSX.Element {
     {
       image: "/img/materials-for-use/Image Frame1.webp",
       title: "Термопластичні еластомери",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+      description: "До 65% скловолокон; жорсткість і довговічність."
     },
     {
       image: "/img/materials-for-use/Image Frame2.webp",
       title: "Вуглецеве волокно",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+      description: "Поєднання карбонових і скловолокон; легкість і жорсткість + ударостійкість."
     },{
-      image: "/img/materials-for-use/Image Frame.webp",
-      title: "XECARB 3DP",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+      image: "/img/materials-for-use/Image Frame4.webp",
+      title: "XEGREEN 3DP",
+      description: "Екологічні композити з перероблених полімерів."
     },
     {
-      image: "/img/materials-for-use/Image Frame1.webp",
-      title: "Термопластичні еластомери",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+      image: "/img/materials-for-use/Image Frame-1.webp",
+      title: "XECARB HM 3DP",
+      description: "Високомодульне карбонове волокно для підвищеної міцності."
     },
     {
-      image: "/img/materials-for-use/Image Frame2.webp",
-      title: "Вуглецеве волокно",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
-    }
+      image: "/img/materials-for-use/Image Frame-2.webp",
+      title: "XECARB SL 3DP",
+      description: "Надлегкі матеріали для дронів і робототехніки."
+    },{
+      image: "/img/materials-for-use/Image Frame-3.webp",
+      title: "XECARB ST 3DP",
+      description: "Надміцні композити для високих навантажень."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-4.webp",
+      title: "XELIGHT 3DP",
+      description: "Легкі й еластичні рішення для спорту та мобільності."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-5.webp",
+      title: "XERAMIC 3DP",
+      description: "Керамічні наповнювачі для теплопровідності й зносостійкості."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-6.webp",
+      title: "XEGREEN BIO 3DP",
+      description: "Біо- та рециклінг-лінійка з відновлюваної сировини."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-7.webp",
+      title: "Гібридні тканини",
+      description: "Поєднання карбону, скла та араміду для балансу характеристик."
+    },
+    {
+      image: "/img/materials-for-use/Image Frame-8.webp",
+      title: "Сотові панелі ThermHex",
+      description: "Низька вага при високій жорсткості."
+    },
   ]
 
 
@@ -140,13 +169,13 @@ export function MaterialsForUse(): JSX.Element {
                        </div>
                        {/* Divider */}
                        <div className="mb-4 w-12 h-0 border-1 border-solid border-blue-500 mx-auto" />
-                     <h3 className="text-[#3F3F46] text-[18px] font-medium leading-[100%] mb-4 text-center font-['Suisse_Intl',system-ui,sans-serif]">
+                     <h3 className="text-[#3F3F46] text-lg font-medium tracking-[0%] mb-4 text-center font-mono">
                        {card.title}
                      </h3>
                      <div className="flex-1 rounded-[6px] border border-[#6BABFA29] p-3 bg-[#1E3A8A05]">
-                       <p className="font-mono font-medium text-[16px] text-gray-500 text-center">
-                         {card.description}
-                       </p>
+                      <p className="font-mono font-medium text-base  tracking-[0%] text-gray-500 text-center">
+                        {card.description}
+                      </p>
                      </div>
                    </div>
                  </div>
@@ -160,7 +189,7 @@ export function MaterialsForUse(): JSX.Element {
              <div className="flex items-center w-[152px] h-[56px] gap-[40px] rounded-xl border border-[#60A5FA] py-2 px-4 bg-[#BFDBFE]">
                <button 
                  onClick={scrollPrev}
-                 className=" hover:scale-110 transition-transform duration-200"
+                 className="cursor-pointer hover:scale-110 transition-transform duration-200"
                >
                  <Image 
                    src="/img/materials-for-use/Icon Arrow.svg" 
@@ -172,7 +201,7 @@ export function MaterialsForUse(): JSX.Element {
                </button>
                <button 
                  onClick={scrollNext}
-                 className=" hover:scale-110 transition-transform duration-200"
+                 className="cursor-pointer hover:scale-110 transition-transform duration-200"
                >
                  <Image 
                    src="/img/materials-for-use/Icon Arrow-1.svg" 

@@ -7,7 +7,7 @@ import { ContactForm } from "@/components/forms/ContactForm"
 // Main Component
 export const Contacts = memo(() => {
   return (
-    <section className="w-full py-[100px] relative overflow-hidden">
+    <section id="contacts" className="w-full py-[100px] relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -59,7 +59,7 @@ export const Contacts = memo(() => {
               className="text-[17px] font-normal leading-[130%] text-[#52525B]"
               style={{ fontFamily: 'Roboto Mono, monospace' }}
             >
-              Зв'яжіться з нами прямо зараз і отримайте персональну консультацію щодо продукції та напівфабрикатів Xenia, Siltex, ThermHex саме для вашої галузі.
+              Зв&apos;яжіться з нами прямо зараз і отримайте персональну консультацію щодо продукції та напівфабрикатів Xenia, Siltex, ThermHex саме для вашої галузі.
             </p>
           </div>
         </div>
@@ -75,10 +75,13 @@ export const Contacts = memo(() => {
             className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
           >
             <div className="flex items-center gap-3">
-              <img 
+              <Image 
                 src="/img/contacts/Icon Frame.svg" 
                 alt="Phone" 
+                width={24}
+                height={24}
                 className="w-6 h-6"
+                unoptimized={true}
               />
               <span 
                 className="text-[#083660]"
@@ -93,24 +96,30 @@ export const Contacts = memo(() => {
                 Номер телефону
               </span>
             </div>
-            <img 
+            <Image 
               src="/img/contacts/Vector.svg" 
               alt="Arrow" 
+              width={16}
+              height={16}
               className="arrow-icon w-4 h-4"
+              unoptimized={true}
             />
           </a>
 
           {/* Email Button */}
           <a 
-            href="mailto:info@example.com"
+            href="mailto:info@componext.com.ua"
             className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
           >
             <div className="flex items-center gap-3">
-              <img 
-                src="/img/contacts/Icon Frame-1.svg" 
-                alt="Email" 
-                className="w-6 h-6"
-              />
+            <Image 
+              src="/img/contacts/Icon Frame-1.svg" 
+              alt="Email" 
+              width={24}
+              height={24}
+              className="w-6 h-6"
+              unoptimized={true}
+            />
               <span 
                 className="text-[#083660]"
                 style={{ 
@@ -124,10 +133,13 @@ export const Contacts = memo(() => {
                 Електронна пошта
               </span>
             </div>
-            <img 
+            <Image 
               src="/img/contacts/Vector.svg" 
               alt="Arrow" 
+              width={16}
+              height={16}
               className="arrow-icon w-4 h-4"
+              unoptimized={true}
             />
           </a>
 
@@ -139,10 +151,13 @@ export const Contacts = memo(() => {
             className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
           >
             <div className="flex items-center gap-3">
-              <img 
+              <Image 
                 src="/img/contacts/Icon Frame-2.svg" 
                 alt="WhatsApp" 
+                width={24}
+                height={24}
                 className="w-6 h-6"
+                unoptimized={true}
               />
               <span 
                 className="text-[#083660]"
@@ -157,25 +172,31 @@ export const Contacts = memo(() => {
                 WhatsApp
               </span>
             </div>
-            <img 
+            <Image 
               src="/img/contacts/Vector.svg" 
               alt="Arrow" 
+              width={16}
+              height={16}
               className="arrow-icon w-4 h-4"
+              unoptimized={true}
             />
           </a>
 
           {/* Telegram Button */}
           <a 
-            href="https://t.me/your_username"
+            href="https://t.me/+380983800400"
             target="_blank"
             rel="noopener noreferrer"
             className="contact-btn flex items-center justify-between p-6 rounded-lg border border-[#DBEAFE] hover:opacity-90 transition-opacity duration-200"
           >
             <div className="flex items-center gap-3">
-              <img 
+              <Image 
                 src="/img/contacts/Icon Frame-3.svg" 
                 alt="Telegram" 
+                width={24}
+                height={24}
                 className="w-6 h-6"
+                unoptimized={true}
               />
               <span 
                 className="text-[#083660]"
@@ -190,10 +211,13 @@ export const Contacts = memo(() => {
                 Telegram
               </span>
             </div>
-            <img 
+            <Image 
               src="/img/contacts/Vector.svg" 
               alt="Arrow" 
+              width={16}
+              height={16}
               className="arrow-icon w-4 h-4"
+              unoptimized={true}
             />
           </a>
         </div>

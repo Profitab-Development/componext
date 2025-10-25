@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export function Logos(): JSX.Element {
   return (
-    <section className="w-full py-[100px]">
+    <section id="partners" className="w-full py-[100px]">
       <div className="container-1320 px-4">
         {/* Logos in a row */}
         <div className="flex items-center justify-between">

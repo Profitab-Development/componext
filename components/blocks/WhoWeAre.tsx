@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export function WhoWeAre(): JSX.Element {
   return (
-    <section className="w-full pt-[100px]">
+    <section id="who-we-are" className="w-full pt-[100px]">
       <div className="container-1320 px-4">
         {/* Title with Icon */}
         <div className="flex items-center gap-3 pb-4 px-4">

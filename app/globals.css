@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Montserrat:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import 'react-phone-number-input/style.css';
+
+/* Ensure fonts are loaded */
+* {
+  font-family: inherit;
+}
 
 @font-face {
   font-family: 'Suisse Intl';
@@ -7,6 +13,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  font-feature-settings: 'kern' 1;
 }
 
 @font-face {
@@ -15,19 +22,22 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  font-feature-settings: 'kern' 1;
 }
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-suisse: 'Suisse Intl', system-ui, sans-serif;
+  --font-suisse: 'Suisse Intl', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Roboto Mono', var(--font-roboto-mono), 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
+  --font-montserrat: 'Montserrat', var(--font-montserrat), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-roboto-mono);
-  --font-mono: var(--font-roboto-mono);
+  --font-sans: var(--font-suisse);
+  --font-mono: 'Roboto Mono', var(--font-roboto-mono), 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,10 +47,65 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto-mono), ui-monospace, SFMono-Regular, monospace;
+  font-family: var(--font-suisse);
+  font-feature-settings: 'kern' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force Roboto Mono for mono elements */
+.font-mono {
+  font-family: 'Roboto Mono', var(--font-roboto-mono), 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace !important;
+}
+
+/* Force Montserrat for montserrat elements */
+.font-montserrat {
+  font-family: 'Montserrat', var(--font-montserrat), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prevent text selection and image dragging in sliders */
+.slider-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.slider-container img {
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+.slider-container a {
+  pointer-events: auto;
+}
+
+/* Smooth scrolling for slider */
+.slider-container {
+  scroll-behavior: smooth;
+  transition: scroll-behavior 0.3s ease;
 }
 .container-1320 {
   width: 100%;

@@ -4,8 +4,12 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { PhoneInput } from "react-international-phone"
 import "react-international-phone/style.css"
-// @ts-ignore - google-libphonenumber doesn't have types
+// @ts-expect-error - google-libphonenumber doesn't have types
 import { PhoneNumberUtil } from "google-libphonenumber"
+
+interface FormData {
+  name: string
+}
 
 export function ContactForm() {
   const [phone, setPhone] = useState("")
@@ -19,7 +23,7 @@ export function ContactForm() {
     try {
       if (!phone) return false
       return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone))
-    } catch (error) {
+    } catch {
       return false
     }
   }
@@ -32,11 +36,11 @@ export function ContactForm() {
     reset,
     formState: { errors },
     watch
-  } = useForm({ mode: 'all' })
+  } = useForm<FormData>({ mode: 'all' })
 
   const watchedName = watch('name', '')
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormData) => {
     const { name } = data
     if (name && isValid) {
       setIsSubmitting(true)
@@ -209,18 +213,29 @@ export function ContactForm() {
           </div>
 
           {/* Submit Button */}
-          <div className="mt-4">
+          <div className="mt-4 flex justify-center">
             <button
               type="submit"
               disabled={isSubmitting || !isValid || !watchedName}
-              className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
+              className={`relative h-[52px] rounded-full font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 transition-all duration-200 ${
                 isSubmitting || !isValid || !watchedName
-                  ? "bg-gray-400 cursor-not-allowed text-gray-600"
-                  : "bg-[#6C3078] hover:bg-[#5a2a63] active:bg-[#4d2354] text-white"
+                  ? "w-[236px] bg-gray-400 cursor-not-allowed text-gray-600"
+                  : "w-[236px] bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat cursor-pointer"
               }`}
-              style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+              style={{ fontFamily: "Roboto Mono, monospace" }}
             >
-              {isSubmitting ? "Відправляємо..." : "Надіслати запит"}
+              {/* Hover background - only when enabled */}
+              {!(isSubmitting || !isValid || !watchedName) && (
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat"></div>
+              )}
+              {/* Text content */}
+              <span className={`relative z-10 transition-colors duration-300 ${
+                isSubmitting || !isValid || !watchedName
+                  ? "text-gray-600"
+                  : "text-[#3B82F6] group-hover:text-[#2563EB]"
+              }`}>
+                {isSubmitting ? "Відправляємо..." : "Надіслати запит"}
+              </span>
             </button>
           </div>
         </form>

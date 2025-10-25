@@ -81,7 +81,7 @@ IndustryCard.displayName = 'IndustryCard'
 // Main Component
 export const Industries = memo(() => {
   return (
-    <section className="w-full py-[80px] relative overflow-hidden">
+    <section id="industries" className="w-full py-[80px] relative overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image

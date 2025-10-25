@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracingRoot: "C:\\Users\\bogda\\OneDrive\\Desktop\\nextjs projects\\componext"
 };
 
 export default nextConfig;
