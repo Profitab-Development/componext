@@ -21,16 +21,16 @@ export function CarAndPartners(): JSX.Element {
                 />
               </div>
               {/* Car Diagram */}
-              <div className="flex-shrink-0">
+              {/* <div className="flex-shrink-0">
                 <Image
                   src="/img/who-we-are/car-diagram.webp"
                   alt="Car Diagram"
                   width={240}
                   height={420}
             unoptimized={true}
-                  className="h-[420px] w-auto"
+                  className="h-full w-full max-h-[420px] max-w-[240px]"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
 

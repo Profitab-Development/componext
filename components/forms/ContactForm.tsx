@@ -82,17 +82,28 @@ export function ContactForm() {
   return (
     <div className="flex justify-center">
       <div className="w-[1320px]">
-        <div className="w-[900px] mx-auto bg-white rounded-md p-8 flex flex-col gap-10">
-        <h4
-          className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
-          style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+        <div 
+          className="relative w-[900px] mx-auto  p-8 flex flex-col gap-10"
+          style={{
+            backgroundImage: "url('/img/contacts/Stroke Form.png')",
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundColor: 'white'
+          }}
         >
-          Форма зворотного звʼязку
-        </h4>
-        
-        
+          <div className="relative" style={{ zIndex: 20 }}>
+          <h4
+            className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
+            style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+          >
+            Форма зворотного звʼязку
+          </h4>
+          </div>
+          
+          
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 flex-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-6 flex-1" style={{ zIndex: 20 }}>
           {/* Name Field */}
           <div>
             <label
@@ -184,8 +195,9 @@ export function ContactForm() {
                   width: '100%',
                   height: '48px',
                   padding: '10px 12px',
-                  borderRadius: '8px',
+                  borderRadius: '0 8px 8px 0',
                   outline: 'none',
+                  borderLeft: 'none',
                   fontFamily: 'Roboto Mono, monospace',
                   fontSize: '14px',
                   color: '#71717A',
@@ -195,12 +207,13 @@ export function ContactForm() {
                   buttonStyle: {
                     height: '48px',
                     padding: '10px 12px',
-                    border: 'none',
+                    borderRight: 'none',
                     borderRadius: '8px 0 0 8px',
                     backgroundColor: 'transparent',
                     fontFamily: 'Roboto Mono, monospace',
                     fontSize: '14px',
                     color: '#71717A',
+                    ...getPhoneInputStyle()
                   }
                 }}
               />
@@ -219,7 +232,7 @@ export function ContactForm() {
               disabled={isSubmitting || !isValid || !watchedName}
               className={`relative h-[52px] rounded-full font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 transition-all duration-200 ${
                 isSubmitting || !isValid || !watchedName
-                  ? "w-[236px] bg-gray-400 cursor-not-allowed text-gray-600"
+                  ? "w-[236px] bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat cursor-not-allowed"
                   : "w-[236px] bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat cursor-pointer"
               }`}
               style={{ fontFamily: "Roboto Mono, monospace" }}
@@ -231,7 +244,7 @@ export function ContactForm() {
               {/* Text content */}
               <span className={`relative z-10 transition-colors duration-300 ${
                 isSubmitting || !isValid || !watchedName
-                  ? "text-gray-600"
+                  ? "text-[#3B82F6] opacity-60"
                   : "text-[#3B82F6] group-hover:text-[#2563EB]"
               }`}>
                 {isSubmitting ? "Відправляємо..." : "Надіслати запит"}
