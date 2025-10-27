@@ -139,10 +139,10 @@ export const Applications = memo(() => {
                   />
                   
                   {/* Content - Top Left */}
-                  <div className="absolute top-8 left-8 z-10 max-w-2xl">
+                  <div className="absolute top-8 left-8 z-10 max-w-[640px]">
                     {/* Title */}
                     <h3 
-                      className="text-[26px] font-medium leading-[130%] tracking-[0%] text-[#3F3F46] mb-6"
+                      className="text-[26px] font-medium leading-[130%] tracking-wider text-[#3F3F46] mb-6"
                       style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
                     >
                       {slide.title}

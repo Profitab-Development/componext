@@ -24,7 +24,7 @@ export function WhoWeAre(): JSX.Element {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {/* Left Column */}
           <div>
-            <p className="text-[26px] font-medium  text-[#3F3F46]" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
+            <p className="text-[26px] font-medium leading-[130%] text-[#3F3F46]" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
               Компанія Компонекст – офіційний імпортер інноваційних композитних матеріалів із Німеччини та Італії: Xenia, Siltex, ThermHex.
             </p>
           </div>
