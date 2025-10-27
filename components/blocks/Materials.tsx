@@ -76,36 +76,24 @@ export function Materials(): JSX.Element {
 
     const rect = section.getBoundingClientRect()
     const windowHeight = window.innerHeight
-    const windowWidth = window.innerWidth
     const sectionHeight = rect.height
     
-    // Get the card width (should be window width in this layout)
-    // We need to ensure each card is 100vw wide for proper centering
-    const cardWidth = windowWidth
-
     // Calculate where we are in the scroll journey
-    // pinStart: when the section becomes fully pinned (sectionTop exactly equals sticky top value, which is 0px)
+    // pinStart: when the section becomes fully pinned (sectionTop exactly equals sticky top value, which is -50px)
     // pinEnd: when we need to stop horizontal scrolling (when last card is centered)
     const sectionTop = rect.top
-    const sectionBottom = rect.bottom
     
     // Only start horizontal scrolling when the section is FULLY pinned
-    // The sticky starts at top:0px, so we check if sectionTop is exactly at 0 or slightly below
-    const isPinned = sectionTop <= 0
+    // The sticky starts at top:-50px, so we check if sectionTop is <= -50
+    const isPinned = sectionTop <= -50
     
     if (!isPinned) {
       // Section is still entering - no horizontal scroll yet
       return 0
     }
 
-    // Calculate the maximum distance we need to scroll horizontally
-    // We scroll from first card (progress 0) to last card centered (progress 1)
-    const slideCount = slides.length
-    const totalScrollableWidth = (slideCount - 1) * cardWidth
-    
     // Calculate how much vertical scrolling distance is available
     // This is the distance the section can scroll while staying pinned
-    const stickyStartPoint = section.offsetTop // Position where section starts
     const stickyDistance = sectionHeight - windowHeight // How much room for scrolling while pinned
     
     if (stickyDistance <= 0) {
@@ -113,14 +101,13 @@ export function Materials(): JSX.Element {
     }
     
     // Calculate how much of the sticky distance has been scrolled
-    // When sectionTop = 0, we're at the start (scrolledPastPin = 0)
-    // When sectionBottom = windowHeight, we're at the end
-    const scrolledPastPin = -sectionTop
+    // When sectionTop = -50, we're at the start (scrolledPastPin = 0)
+    // When we've scrolled further, scrolledPastPin increases
+    const scrolledPastPin = -50 - sectionTop
     
-    // Add a "dead zone" at the start - first 20% of scroll is for reading first card
-    // Only the remaining 80% is used for horizontal scrolling
+    // Add a "dead zone" at the start - first 10% of scroll is for reading first card
+    // Only the remaining 90% (minus end dead zone) is used for horizontal scrolling
     const deadZone = stickyDistance * 0.1
-    const scrollableZone = stickyDistance - deadZone
     
     if (scrolledPastPin <= deadZone) {
       // Still in dead zone - first card stays visible
@@ -244,11 +231,13 @@ export function Materials(): JSX.Element {
         rafIdRef.current = null
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Update animations whenever scrollProgress changes
   useEffect(() => {
     updateAnimations(scrollProgress)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollProgress])
 
   return (

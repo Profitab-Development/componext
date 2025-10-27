@@ -82,17 +82,28 @@ export function ContactForm() {
   return (
     <div className="flex justify-center">
       <div className="w-[1320px]">
-        <div className="w-[900px] mx-auto bg-white rounded-md p-8 flex flex-col gap-10">
-        <h4
-          className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
-          style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+        <div 
+          className="relative w-[900px] mx-auto  p-8 flex flex-col gap-10"
+          style={{
+            backgroundImage: "url('/img/contacts/Stroke Form.png')",
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundColor: 'white'
+          }}
         >
-          Форма зворотного звʼязку
-        </h4>
-        
-        
+          <div className="relative" style={{ zIndex: 20 }}>
+          <h4
+            className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
+            style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+          >
+            Форма зворотного звʼязку
+          </h4>
+          </div>
+          
+          
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 flex-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-6 flex-1" style={{ zIndex: 20 }}>
           {/* Name Field */}
           <div>
             <label
