@@ -221,3 +221,28 @@ body {
 .arrow-icon {
   transition: transform 0.3s ease-in-out;
 }
+
+/* Marquee infinite scrolling animation - optimized for performance */
+.marquee-infinite {
+  animation: marquee 15s linear infinite;
+  will-change: transform;
+}
+
+.marquee-item {
+  width: 33.333%;
+  padding: 0 3rem;
+  flex-shrink: 0;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-infinite:hover {
+  animation-play-state: paused;
+}
