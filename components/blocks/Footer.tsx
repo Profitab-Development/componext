@@ -48,12 +48,12 @@ export function Footer() {
             >
               Послуги
             </a>
-            <a 
+            {/* <a 
               href="#partners" 
               className="font-mono font-medium text-base leading-[130%] text-center text-gray-600 hover:text-blue-500 transition-colors scroll-smooth"
             >
               Відгуки
-            </a>
+            </a> */}
             
             <a 
               href="#contacts" 
