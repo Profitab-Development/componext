@@ -16,12 +16,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Site under development!",
+  title: "Інноваційні композитні матеріали, термопластичні композити з Європи",
+  description: "Комплексні рішення із використанням інноваційних композитів для авіації, машинобудування і промисловості: постачання матеріалів та технологій, обладнання та інструментів для обробки, технологічна підтримка, супровід",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
-    <html lang="en">
+    <html lang="uk">
       <body suppressHydrationWarning className={`${robotoMono.variable} ${montserrat.variable} antialiased`}>
         {children}
       </body>
