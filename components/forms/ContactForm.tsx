@@ -76,18 +76,24 @@ export function ContactForm() {
     watch            // Відстеження змін полів форми в реальному часі
   } = useForm<FormData>({ mode: 'all' })
 
-  // Відстежуємо зміни поля name для динамічної валідації
+  // Відстежуємо зміни поля衡量 name для динамічної валідації
   const watchedName = watch('name', '')
   
+  // Логування змін стану
+  console.log('[ContactForm] State:', { phone, isValid, watchedName, isSubmitting, submitStatus })
 
   // ============================================================================
   // ОБРОБНИК ВІДПРАВКИ ФОРМИ
   // ============================================================================
   const onSubmit = async (data: FormData) => {
+    console.log('[ContactForm] onSubmit called:', data)
     const { name } = data
     
     // Якщо ім'я або телефон не валідні - не відправляємо
-    if (!name || !isValid) return
+    if (!name || !isValid) {
+      console.log('[ContactForm] Validation failed:', { name, isValid })
+      return
+    }
     
     // Вмикаємо стан "відправляємо..."
     setIsSubmitting(true)
@@ -109,12 +115,14 @@ export function ContactForm() {
         JSON.stringify(authData),
         SECRET_KEY
       ).toString()
+      console.log('[ContactForm] Encrypted auth length:', authDataEncrypt.length)
 
       // Формуємо FormData з полями форми
       const formData = new FormData()
       formData.append('name', name)
       formData.append('phone', phone)
       formData.append('authData', authDataEncrypt)
+      console.log('[ContactForm] FormData prepared:', { name, phone })
       // опціонально: email якщо є поле у формі з name="email"
       try {
         const emailInput = document.querySelector<HTMLInputElement>('input[name="email"]')
@@ -132,17 +140,20 @@ export function ContactForm() {
       } catch {}
 
       // Надсилаємо на Rabbit proxy
+      console.log('[ContactForm] Sending POST to:', rabbitProxy)
       const res = await fetch(rabbitProxy, {
         method: 'POST',
         body: formData,
       })
       
-      // Перевіряємо чи запит успішний
+      // Перевіряємо чи запит успі同样ий
+      console.log('[ContactForm] Response status:', res.status, res.statusText)
       if (!res.ok) {
         const errorText = await res.text().catch(() => '')
-        console.error('Rabbit proxy error:', res.status, res.statusText, errorText)
+        console.error('[ContactForm] Rabbit proxy error:', res.status, res.statusText, errorText)
         throw new Error('Send failed')
       }
+      console.log('[ContactForm] Success! Response OK')
       
       // Очищаємо форму після успішної відправки
       reset()
@@ -166,8 +177,9 @@ export function ContactForm() {
       } catch {}
       // Редірект прибрано за вимогою — залишаємо користувача на поточній сторінці
       
-    } catch {
+    } catch (err) {
       // Показуємо повідомлення про помилку
+      console.error('[ContactForm] Submit error:', err)
       setSubmitStatus('error')
     } finally {
       // Вимикаємо стан "відправляємо..." в будь-якому випадку
@@ -384,6 +396,12 @@ export function ContactForm() {
             <button
               type="submit"
               disabled={isSubmitting || !isValid || !watchedName}
+              onClick={(e) => {
+                console.log('Button click:', { isSubmitting, isValid, watchedName, submitStatus })
+                if (isSubmitting || !isValid || !watchedName) {
+                  e.preventDefault()
+                }
+              }}
               className={`relative h-[52px] rounded-full font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 transition-all duration-200 ${
                 isSubmitting || !isValid || !watchedName
                   ? "w-[236px] bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat cursor-not-allowed"
