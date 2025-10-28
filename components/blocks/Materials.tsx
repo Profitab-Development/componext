@@ -310,7 +310,7 @@ export function Materials(): JSX.Element {
                       height={63}
                       priority={index === 0}
                       draggable={false}
-                      className="select-none"
+                      className="select-none h-10 w-auto md:h-12"
                     />
                   </div>
 
@@ -325,7 +325,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Button */}
-                  <div className="flex justify-center my-8">
+                  <div className="flex justify-center mt-8 mb-4">
                     <a
                       href="#contacts"
                       className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
@@ -341,15 +341,15 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Arrow indicator */}
-                  {/* <div className="flex justify-center mb-8 arrow-indicator">
+                  <div className="flex justify-center mb-4 ">
                     <Image
                       src="/img/materials/Group Arrows.svg"
                       alt="Group Arrows"
                       width={12}
-                      height={82}
-                      unoptimized={true}
+                      height={64}
+                      
                     />
-                  </div> */}
+                  </div>
 
                   {/* Materials List */}
                   <div className="max-w-[698px] mx-auto my-8">
