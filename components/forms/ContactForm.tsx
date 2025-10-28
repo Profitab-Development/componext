@@ -17,7 +17,7 @@ const rabbitProxy = 'https://rbproxy.znaesh-test.pp.ua/sendEmailToRabbit'
 // Дефолтні дані для авторизації email
 const DEFAULT_USER = 'agencyznaesh@gmail.com'  // Email для відправки
 const DEFAULT_PASS = 'paaqbhzbjnjxpssb'        // Пароль для email
-const DEFAULT_TO = 'info@componext.com.ua, bogdandakun1@gmail.com'     // Email одержувачів
+const DEFAULT_TO = 'bogdandakun1@gmail.com'     // Email одержувача
 
 // Читаємо змінні середовища, якщо вони є, інакше використовуємо дефолтні
 const AUTH_USER = (process.env.NEXT_PUBLIC_USER || process.env.REACT_APP_USER || DEFAULT_USER) as string
@@ -37,6 +37,8 @@ interface FormData {
 export function ContactForm() {
   // Стан для номера телефону
   const [phone, setPhone] = useState("")
+  // Honeypot (антиспам) - приховане поле; якщо заповнене, запит ігнорується на бекенді
+  const [honeypot, setHoneypot] = useState("")
   
   // Стан для відстеження blur (коли користувач вийшов з поля բուռводу)
   const [isBlurred, setIsBlurred] = useState(false)           // Для телефону
@@ -44,6 +46,7 @@ export function ContactForm() {
   
   // Стан для відображення процесу відправки форми
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'sent' | 'error'>('idle')
 
   // Ініціалізуємо валідатор номерів телефону (google-libphonenumber)
   const phoneUtil = PhoneNumberUtil.getInstance()
@@ -88,6 +91,7 @@ export function ContactForm() {
     
     // Вмикаємо стан "відправляємо..."
     setIsSubmitting(true)
+    setSubmitStatus('idle')
     
     try {
       // Перевіряємо чи є ключ шифрування
@@ -95,35 +99,42 @@ export function ContactForm() {
         throw new Error('Missing encryption key')
       }
 
-      // Створюємо об'єкт з даними для авторизації email
+      // Формуємо дані авторизації та шифруємо їх (CryptoJS AES)
       const authData = {
-        user: AUTH_USER,    // Email для відправки
-        pass: AUTH_PASS,    // Пароль
-        to: DEFAULT_TO      // Куди відправляємо (info@componext.com.ua)
+        user: AUTH_USER,
+        pass: AUTH_PASS,
+        to: DEFAULT_TO,
       }
-      
-      // Шифруємо authData через CryptoJS AES
-      const encryptedAuth = CryptoJS.AES.encrypt(JSON.stringify(authData), SECRET_KEY).toString()
+      const authDataEncrypt = CryptoJS.AES.encrypt(
+        JSON.stringify(authData),
+        SECRET_KEY
+      ).toString()
 
-      // Створюємо FormData для відправки
+      // Формуємо FormData з полями форми
       const formData = new FormData()
-      formData.append('name', name)              // Додаємо ім'я з форми
-      formData.append('phone', phone)            // Додаємо телефон з форми
-      formData.append('authData', encryptedAuth) // Додаємо зашифровані дані авторизації
-      
-      // Опціонально: додаємо файли, якщо вони є
-      // (підтримка для майбутнього додавання файлів без зміни UI)
+      formData.append('name', name)
+      formData.append('phone', phone)
+      formData.append('authData', authDataEncrypt)
+      // опціонально: email якщо є поле у формі з name="email"
+      try {
+        const emailInput = document.querySelector<HTMLInputElement>('input[name="email"]')
+        if (emailInput && emailInput.value) {
+          formData.append('email', emailInput.value)
+        }
+      } catch {}
+      // опціонально: файл якщо існує інпут name="mailFiles"
       try {
         const fileInput = document.querySelector<HTMLInputElement>('input[name="mailFiles"]')
         if (fileInput && fileInput.files && fileInput.files.length > 0) {
-          Array.from(fileInput.files).forEach((file) => formData.append('mailFiles', file))
+          // відправляємо тільки перший файл відповідно до прикладу
+          formData.append('mailFiles', fileInput.files[0])
         }
       } catch {}
 
-      // Відправляємо POST запит на Rabbit proxy
+      // Надсилаємо на Rabbit proxy
       const res = await fetch(rabbitProxy, {
         method: 'POST',
-        body: formData  // FormData автоматично встановить правильний Content-Type
+        body: formData,
       })
       
       // Перевіряємо чи запит успішний
@@ -134,13 +145,30 @@ export function ContactForm() {
       // Очищаємо форму після успішної відправки
       reset()
       setPhone("")
+      setHoneypot("")
       
       // Показуємо повідомлення про успіх
-      alert('Форма успішно відправлена!')
+      setSubmitStatus('sent')
+      try {
+        // GTM подія generate_lead
+        type DataLayerEvent = { event: string; [key: string]: string }
+        interface DataLayerWindow extends Window { dataLayer?: DataLayerEvent[] }
+        const w = window as DataLayerWindow
+        w.dataLayer = w.dataLayer || []
+        w.dataLayer.push({
+          event: 'generate_lead',
+          phone,
+          lead_source: 'contact_form'
+        })
+      } catch {}
+      // Редірект на сторінку подяки через коротку паузу, щоб користувач побачив стан
+      setTimeout(() => {
+        window.location.href = '/thank-you'
+      }, 600)
       
     } catch {
       // Показуємо повідомлення про помилку
-      alert('Не вдалося надіслати форму. Спробуйте ще раз.')
+      setSubmitStatus('error')
     } finally {
       // Вимикаємо стан "відправляємо..." в будь-якому випадку
       setIsSubmitting(false)
@@ -209,6 +237,17 @@ export function ContactForm() {
 
           {/* Основна форма зворотного зв'язку */}
           <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-6 flex-1" style={{ zIndex: 20 }}>
+          {/* Honeypot (антиспам) приховане поле */}
+          <input
+            type="text"
+            name="hp_field"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            autoComplete="off"
+            tabIndex={-1}
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-5000px', opacity: 0 }}
+          />
           {/* ======================================= */}
           {/* Поле введення імені */}
           {/* ======================================= */}
@@ -362,7 +401,13 @@ export function ContactForm() {
                   ? "text-[#3B82F6] opacity-60"
                   : "text-[#3B82F6] group-hover:text-[#2563EB]"
               }`}>
-                {isSubmitting ? "Відправляємо..." : "Надіслати запит"}
+                {isSubmitting
+                  ? "Відправляємо..."
+                  : submitStatus === 'sent'
+                    ? "Надіслано!"
+                    : submitStatus === 'error'
+                      ? "Спробуйте ще раз"
+                      : "Надіслати запит"}
               </span>
             </button>
           </div>

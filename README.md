@@ -1,3 +1,21 @@
+## Environment variables
+
+Create a `.env.local` file (not committed) with:
+
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_smtp_username
+SMTP_PASS=your_smtp_password
+
+# Email recipients (comma-separated allowed)
+MAIL_TO=info@componext.com.ua, bogdandakun1@gmail.com
+
+# Optional:
+# MAIL_SUBJECT=Нова заявка з сайту
+# MAIL_FROM=no-reply@componext.com.ua
+```
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
