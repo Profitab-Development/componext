@@ -139,6 +139,8 @@ export function ContactForm() {
       
       // Перевіряємо чи запит успішний
       if (!res.ok) {
+        const errorText = await res.text().catch(() => '')
+        console.error('Rabbit proxy error:', res.status, res.statusText, errorText)
         throw new Error('Send failed')
       }
       
@@ -149,6 +151,7 @@ export function ContactForm() {
       
       // Показуємо повідомлення про успіх
       setSubmitStatus('sent')
+      alert('Форма успішно відправлена!')
       try {
         // GTM подія generate_lead
         type DataLayerEvent = { event: string; [key: string]: string }
@@ -161,10 +164,7 @@ export function ContactForm() {
           lead_source: 'contact_form'
         })
       } catch {}
-      // Редірект на сторінку подяки через коротку паузу, щоб користувач побачив стан
-      setTimeout(() => {
-        window.location.href = '/thank-you'
-      }, 600)
+      // Редірект прибрано за вимогою — залишаємо користувача на поточній сторінці
       
     } catch {
       // Показуємо повідомлення про помилку
@@ -405,9 +405,7 @@ export function ContactForm() {
                   ? "Відправляємо..."
                   : submitStatus === 'sent'
                     ? "Надіслано!"
-                    : submitStatus === 'error'
-                      ? "Спробуйте ще раз"
-                      : "Надіслати запит"}
+                    : "Надіслати запит"}
               </span>
             </button>
           </div>
