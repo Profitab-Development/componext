@@ -145,14 +145,14 @@ export function MaterialsForUse(): JSX.Element {
         </div>
          {/* Slider */}
          <div className="mt-15">
-           <div className="embla overflow-hidden" ref={emblaRef}>
-             <div className="embla__container flex">
+          <div className="embla overflow-hidden" ref={emblaRef}>
+            <div className="embla__container flex -mx-[10.5px]">
                {cards.map((card, index) => {
                  const isCurrentSlide = index === currentSlide
                  const shouldBlur = !isCurrentSlide // Блюримо всі слайди, крім поточного
                  
                 return (
-                  <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_51%] lg:flex-[0_0_33.3%] min-w-0 pl-5 pr-5">
+                  <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_51%] lg:flex-[0_0_33.3%] min-w-0 px-[10.5px]">
                      <div 
                        className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full shadow-[inset_0px_0px_68px_0px_#1D4ED80D,inset_0px_2px_4px_0px_#1D4ED81A] transition-all duration-300"
                        style={shouldBlur ? { filter: 'blur(4px)' } : {}}
