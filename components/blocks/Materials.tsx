@@ -315,7 +315,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Title */}
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <p 
                       className="text-center text-lg font-normal leading-[130%] tracking-[0%] text-[#3F3F46]" 
                       style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
@@ -325,7 +325,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Button */}
-                  <div className="flex justify-center mt-8 mb-4">
+                  <div className="flex justify-center  mb-4">
                     <a
                       href="#contacts"
                       className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
