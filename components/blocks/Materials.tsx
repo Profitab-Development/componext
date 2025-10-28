@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
 
 export function Materials(): JSX.Element {
+  const SLIDE_VW = 46 // slide width as a percentage of viewport width for stronger peek effect
   // Refs for DOM elements and scroll state
   const sectionRef = useRef<HTMLElement>(null)
   const stickyInnerRef = useRef<HTMLDivElement>(null)
@@ -146,11 +147,15 @@ export function Materials(): JSX.Element {
     const windowWidth = window.innerWidth
     const slideCount = slides.length
     
-    // To center the last slide, we need to scroll (slides.length - 1) window widths
-    const maxTranslate = (slideCount - 1) * windowWidth
+    // Compute slide width in px based on SLIDE_VW and center offset
+    const slideWidthPx = windowWidth * (SLIDE_VW / 100)
+    const centerOffset = (windowWidth - slideWidthPx) / 2
+
+    // To center the last slide, we need to scroll (slides.length - 1) slide widths
+    const maxTranslate = (slideCount - 1) * slideWidthPx
     
-    // Progress: 0 = first slide centered (translate 0), 1 = last slide centered (translate max)
-    const translateX = -progress * maxTranslate
+    // Progress: 0 = first slide centered, 1 = last slide centered
+    const translateX = centerOffset + (-progress * maxTranslate)
     
     container.style.transform = `translateX(${translateX}px)`
     container.style.transition = 'none' // Disable transitions for smooth scrolling
@@ -281,7 +286,7 @@ export function Materials(): JSX.Element {
       </div>
 
       {/* Sticky container - only for cards */}
-      <div className="sticky -top-[50px] min-h-[calc(100vh-200px)] flex items-start bg-white overflow-hidden pt-[148px] pb-[100px]">
+      <div className="sticky top-[0px] min-h-[calc(100vh-200px)] flex items-start bg-white overflow-hidden pt-[148px] pb-[100px]">
         <div ref={stickyInnerRef} className="w-full flex flex-col">
           {/* Scroll-triggered content container */}
           <div className="relative flex-1 flex items-center w-full">
@@ -293,9 +298,9 @@ export function Materials(): JSX.Element {
                 <div
                   key={slide.id}
                   className="scroll-slide flex-shrink-0"
-                  style={{ width: '100vw' }}
+                  style={{ width: '46vw' }}
                 >
-                <div className="text-center px-4">
+                <div className="text-center px-2">
                   {/* Logo */}
                   <div className="flex justify-center mb-6">
                     <Image
@@ -336,7 +341,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Arrow indicator */}
-                  <div className="flex justify-center mb-8 arrow-indicator">
+                  {/* <div className="flex justify-center mb-8 arrow-indicator">
                     <Image
                       src="/img/materials/Group Arrows.svg"
                       alt="Group Arrows"
@@ -344,7 +349,7 @@ export function Materials(): JSX.Element {
                       height={82}
                       unoptimized={true}
                     />
-                  </div>
+                  </div> */}
 
                   {/* Materials List */}
                   <div className="max-w-[698px] mx-auto my-8">

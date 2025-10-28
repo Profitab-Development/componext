@@ -50,7 +50,7 @@ export function MaterialsForUse(): JSX.Element {
     {
       image: "/img/materials-for-use/Image Frame.webp",
       title: "XECARB 3DP",
-      description: "вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
+      description: "Вміст до 50% карбонових волокон; висока міцність, електропровідність, низька щільність."
     },
     {
       image: "/img/materials-for-use/Image Frame1.webp",
@@ -151,8 +151,8 @@ export function MaterialsForUse(): JSX.Element {
                  const isCurrentSlide = index === currentSlide
                  const shouldBlur = !isCurrentSlide // Блюримо всі слайди, крім поточного
                  
-                 return (
-                   <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-5">
+                return (
+                  <div key={index} className="embla__slide flex-[0_0_100%] md:flex-[0_0_51%] lg:flex-[0_0_33.3%] min-w-0 pl-5 pr-5">
                      <div 
                        className="gradient-card bg-white/70 backdrop-blur-sm p-4 pt-6 flex flex-col h-full shadow-[inset_0px_0px_68px_0px_#1D4ED80D,inset_0px_2px_4px_0px_#1D4ED81A] transition-all duration-300"
                        style={shouldBlur ? { filter: 'blur(4px)' } : {}}
