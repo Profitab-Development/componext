@@ -16,12 +16,18 @@ export function Hero(): JSX.Element {
       [@media(max-width:1440px)]:-translate-x-10
       [@media(max-width:1440px)]:-translate-y-10
       [@media(max-width:1440px)]:origin-top-left
+
+      [@media(min-width:1441px)]:scale-[1.04]
+      [@media(min-width:1441px)]:-translate-x-10
+      [@media(min-width:1441px)]:-translate-y-10
+      [@media(min-width:1441px)]:origin-top-left
     "
           priority
           sizes="100vw"
           unoptimized={true}
         />
       </div>
+
 
 
 
