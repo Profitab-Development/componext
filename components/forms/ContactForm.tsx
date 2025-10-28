@@ -63,7 +63,7 @@ export function ContactForm() {
       } else {
         alert('Форма успішно відправлена!')
       }
-    } catch (e) {
+    } catch {
       alert('Не вдалося надіслати форму. Спробуйте ще раз.')
     } finally {
       setIsSubmitting(false)
