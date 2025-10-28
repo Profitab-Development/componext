@@ -5,18 +5,27 @@ export function Hero(): JSX.Element {
   return (
     <section className="w-full h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
           src="/img/hero/HeroSection.webp"
           alt="Hero Background"
           fill
-          className="object-cover"
+          className="
+      object-cover w-full h-full
+      [@media(max-width:1440px)]:scale-[1.04]
+      [@media(max-width:1440px)]:-translate-x-10
+      [@media(max-width:1440px)]:-translate-y-10
+      [@media(max-width:1440px)]:origin-top-left
+    "
           priority
           sizes="100vw"
           unoptimized={true}
         />
       </div>
-      
+
+
+
+
       {/* Content */}
       <div className="relative z-10 container-1320 px-4 text-left flex flex-col justify-end pb-[60px] h-full">
         <div className="max-w-[770px]">
@@ -27,10 +36,10 @@ export function Hero(): JSX.Element {
             Комплексні рішення із використанням інноваційних композитів для авіації, машинобудування і промисловості: постачання матеріалів та технологій, обладнання та інструментів для обробки, технологічна підтримка, супровід
           </p>
         </div>
-        
+
         {/* Logos */}
         <div className="flex items-center gap-8 lg:gap-12">
-          
+
           <Image
             src="/img/hero/logo-3.webp"
             alt="Xenia Logo"
