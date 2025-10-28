@@ -6,96 +6,186 @@ import { PhoneInput } from "react-international-phone"
 import "react-international-phone/style.css"
 // @ts-expect-error - google-libphonenumber doesn't have types
 import { PhoneNumberUtil } from "google-libphonenumber"
+import CryptoJS from "crypto-js"
 
+// ============================================================================
+// КОНФІГУРАЦІЯ - URL та дані для Rabbit Proxy
+// ============================================================================
+// URL endpoint для відправки email через Rabbit proxy
+const rabbitProxy = 'https://rbproxy.znaesh-test.pp.ua/sendEmailToRabbit'
+
+// Дефолтні дані для авторизації email
+const DEFAULT_USER = 'agencyznaesh@gmail.com'  // Email для відправки
+const DEFAULT_PASS = 'paaqbhzbjnjxpssb'        // Пароль для email
+const DEFAULT_TO = 'info@componext.com.ua, bogdandakun1@gmail.com'     // Email одержувачів
+
+// Читаємо змінні середовища, якщо вони є, інакше використовуємо дефолтні
+const AUTH_USER = (process.env.NEXT_PUBLIC_USER || process.env.REACT_APP_USER || DEFAULT_USER) as string
+const AUTH_PASS = (process.env.NEXT_PUBLIC_PASS || process.env.REACT_APP_PASS || DEFAULT_PASS) as string
+const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || process.env.REACT_APP_SECRET_KEY || "") as string
+
+// ============================================================================
+// ТИПИ ДАНИХ
+// ============================================================================
 interface FormData {
   name: string
 }
 
+// ============================================================================
+// ОСНОВНИЙ КОМПОНЕНТ ФОРМИ
+// ============================================================================
 export function ContactForm() {
+  // Стан для номера телефону
   const [phone, setPhone] = useState("")
-  const [isBlurred, setIsBlurred] = useState(false)
-  const [isBlurredName, setIsBlurredName] = useState(false)
+  
+  // Стан для відстеження blur (коли користувач вийшов з поля բուռводу)
+  const [isBlurred, setIsBlurred] = useState(false)           // Для телефону
+  const [isBlurredName, setIsBlurredName] = useState(false)   // Для імені
+  
+  // Стан для відображення процесу відправки форми
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Ініціалізуємо валідатор номерів телефону (google-libphonenumber)
   const phoneUtil = PhoneNumberUtil.getInstance()
   
+  // Перевірка чи коректний номер телефону
   const isPhoneValid = () => {
     try {
-      if (!phone) return false
+      if (!phone) return false  // Якщо телефон порожній - не валідний
+      // Використовуємо google-libphonenumber для валідації
       return phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone))
     } catch {
-      return false
+      return false  // Якщо помилка парсингу - не валідний
     }
   }
 
+  // Запам'ятовуємо результат валідації телефону
   const isValid = isPhoneValid()
 
+  // ============================================================================
+  // React Hook Form - для валідації та управління формою
+  // ============================================================================
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    watch
+    register,        // Реєстрація полів форми
+    handleSubmit,    // Обробка сабміту форми
+    reset,           // Скидання форми після успішної відправки
+    formState: { errors },  // Помилки валідації
+    watch            // Відстеження змін полів форми в реальному часі
   } = useForm<FormData>({ mode: 'all' })
 
+  // Відстежуємо зміни поля name для динамічної валідації
   const watchedName = watch('name', '')
+  
 
+  // ============================================================================
+  // ОБРОБНИК ВІДПРАВКИ ФОРМИ
+  // ============================================================================
   const onSubmit = async (data: FormData) => {
     const { name } = data
+    
+    // Якщо ім'я або телефон не валідні - не відправляємо
     if (!name || !isValid) return
+    
+    // Вмикаємо стан "відправляємо..."
     setIsSubmitting(true)
+    
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone })
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err?.error || 'Send failed')
+      // Перевіряємо чи є ключ шифрування
+      if (!SECRET_KEY) {
+        throw new Error('Missing encryption key')
       }
-      const data = await res.json().catch(() => ({}))
+
+      // Створюємо об'єкт з даними для авторизації email
+      const authData = {
+        user: AUTH_USER,    // Email для відправки
+        pass: AUTH_PASS,    // Пароль
+        to: DEFAULT_TO      // Куди відправляємо (info@componext.com.ua)
+      }
+      
+      // Шифруємо authData через CryptoJS AES
+      const encryptedAuth = CryptoJS.AES.encrypt(JSON.stringify(authData), SECRET_KEY).toString()
+
+      // Створюємо FormData для відправки
+      const formData = new FormData()
+      formData.append('name', name)              // Додаємо ім'я з форми
+      formData.append('phone', phone)            // Додаємо телефон з форми
+      formData.append('authData', encryptedAuth) // Додаємо зашифровані дані авторизації
+      
+      // Опціонально: додаємо файли, якщо вони є
+      // (підтримка для майбутнього додавання файлів без зміни UI)
+      try {
+        const fileInput = document.querySelector<HTMLInputElement>('input[name="mailFiles"]')
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+          Array.from(fileInput.files).forEach((file) => formData.append('mailFiles', file))
+        }
+      } catch {}
+
+      // Відправляємо POST запит на Rabbit proxy
+      const res = await fetch(rabbitProxy, {
+        method: 'POST',
+        body: formData  // FormData автоматично встановить правильний Content-Type
+      })
+      
+      // Перевіряємо чи запит успішний
+      if (!res.ok) {
+        throw new Error('Send failed')
+      }
+      
+      // Очищаємо форму після успішної відправки
       reset()
       setPhone("")
-      if (data?.previewUrl) {
-        alert(`Форма успішно відправлена! Перегляд листа: ${data.previewUrl}`)
-        console.log('Mail preview URL:', data.previewUrl)
-      } else {
-        alert('Форма успішно відправлена!')
-      }
+      
+      // Показуємо повідомлення про успіх
+      alert('Форма успішно відправлена!')
+      
     } catch {
+      // Показуємо повідомлення про помилку
       alert('Не вдалося надіслати форму. Спробуйте ще раз.')
     } finally {
+      // Вимикаємо стан "відправляємо..." в будь-якому випадку
       setIsSubmitting(false)
     }
   }
 
-  // Visual validation styles
+  // ============================================================================
+  // СТИЛІ ВАЛІДАЦІЇ - динамічна зміна стилю полів в залежності від валідації
+  // ============================================================================
+  
+  // Стиль для помилки (червона рамка)
   const redBorder = {
     border: '2px solid #ef4444',
     boxShadow: 'inset 0px 0px 20px 1px rgba(239, 68, 68, 0.3)',
   }
   
+  // Стиль для успішної валідації (зелена рамка)
   const greenBorder = {
     border: '2px solid #22c55e',
     boxShadow: 'inset 0px 0px 20px 10px rgba(34, 197, 94, 0.3)',
   }
 
+  // Функція для визначення стилю поля телефону
   const getPhoneInputStyle = () => {
-    if (!isValid && isBlurred) return redBorder
-    if (isValid && isBlurred) return greenBorder
-    return { border: '1px solid #d1d5db' }
+    if (!isValid && isBlurred) return redBorder      // Червоний якщо не валідний та blur
+    if (isValid && isBlurred) return greenBorder     // Зелений якщо валідний та blur
+    return { border: '1px solid #d1d5db' }           // Сірий за замовчуванням
   }
 
+  // Функція для визначення стилю поля імені
   const getNameInputStyle = () => {
-    if (errors.name) return redBorder
-    if (!errors.name && isBlurredName && watchedName) return greenBorder
-    return { border: '1px solid #d1d5db' }
+    if (errors.name) return redBorder                                 // Червоний якщо є помилка
+    if (!errors.name && isBlurredName && watchedName) return greenBorder  // Зелений якщо валідний та blur
+    return { border: '1px solid #d1d5db' }                            // Сірий за замовчуванням
   }
 
+  
+
+  // ============================================================================
+  // ОТРИМАННЯ JSX - рендер форми
+  // ============================================================================
   return (
     <div className="flex justify-center">
       <div className="w-[1320px]">
+        {/* Контейнер форми з фоновим зображенням */}
         <div 
           className="relative w-[900px] mx-auto  p-8 flex flex-col gap-10"
           style={{
@@ -117,8 +207,11 @@ export function ContactForm() {
           
           
 
+          {/* Основна форма зворотного зв'язку */}
           <form onSubmit={handleSubmit(onSubmit)} className="relative flex flex-col gap-6 flex-1" style={{ zIndex: 20 }}>
-          {/* Name Field */}
+          {/* ======================================= */}
+          {/* Поле введення імені */}
+          {/* ======================================= */}
           <div>
             <label
               htmlFor="name"
@@ -189,7 +282,11 @@ export function ContactForm() {
             )}
           </div>
 
-          {/* Phone Field */}
+          
+
+          {/* ======================================= */}
+          {/* Поле введення номера телефону */}
+          {/* ======================================= */}
           <div>
             <label
               htmlFor="phone"
@@ -239,7 +336,11 @@ export function ContactForm() {
             )}
           </div>
 
-          {/* Submit Button */}
+          
+
+          {/* ======================================= */}
+          {/* Кнопка відправки форми */}
+          {/* ======================================= */}
           <div className="mt-4 flex justify-center">
             <button
               type="submit"
@@ -251,11 +352,11 @@ export function ContactForm() {
               }`}
               style={{ fontFamily: "Roboto Mono, monospace" }}
             >
-              {/* Hover background - only when enabled */}
+              {/* Ефект hover - показується тільки коли кнопка активна */}
               {!(isSubmitting || !isValid || !watchedName) && (
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat"></div>
               )}
-              {/* Text content */}
+              {/* Текст на кнопці */}
               <span className={`relative z-10 transition-colors duration-300 ${
                 isSubmitting || !isValid || !watchedName
                   ? "text-[#3B82F6] opacity-60"
