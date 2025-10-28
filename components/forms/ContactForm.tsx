@@ -40,19 +40,33 @@ export function ContactForm() {
 
   const watchedName = watch('name', '')
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const { name } = data
-    if (name && isValid) {
-      setIsSubmitting(true)
-      
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Дані форми:', { name, phone })
-        reset()
-        setPhone("")
-        setIsSubmitting(false)
-        alert("Форма успішно відправлена!")
-      }, 1000)
+    if (!name || !isValid) return
+    setIsSubmitting(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err?.error || 'Send failed')
+      }
+      const data = await res.json().catch(() => ({}))
+      reset()
+      setPhone("")
+      if (data?.previewUrl) {
+        alert(`Форма успішно відправлена! Перегляд листа: ${data.previewUrl}`)
+        console.log('Mail preview URL:', data.previewUrl)
+      } else {
+        alert('Форма успішно відправлена!')
+      }
+    } catch {
+      alert('Не вдалося надіслати форму. Спробуйте ще раз.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 

@@ -18,43 +18,43 @@ export const Applications = memo(() => {
     {
       id: 2,
       title: "Каяк One Go",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=2.webp"
     },
     {
       id: 3,
       title: "Чемодан Aero Carbon",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=3.webp"
     },
     {
       id: 4,
       title: "Човен",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=4.webp"
     },
     {
       id: 5,
       title: "Корпус/Форма",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=5.webp"
     },
     {
       id: 6,
       title: "Корпус гоночного боліду",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=6.webp"
     },
     {
       id: 7,
       title: "Лижне спорядження",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=7.webp"
     },
     {
       id: 8,
       title: "Автомобільний бокс",
-      description: "Lorem ipsum dolor sit amet consectetur. Euismod sagittis velit integer a sit.",
+      description: "",
       background: "/img/applications/Slide=8.webp"
     }
   ]

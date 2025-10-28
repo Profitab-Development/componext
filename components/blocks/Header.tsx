@@ -20,7 +20,7 @@ export function Header(): JSX.Element {
 
         <a 
           href="tel:+380983800400"
-          className="relative rounded-full font-mono font-medium text-base leading-[130%] group border-[1.6px] flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat"
+          className="relative rounded-full font-mono font-medium text-base leading-[130%] group  flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat"
         >
           {/* Hover background */}
           <div 
