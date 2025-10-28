@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
 
 export function Materials(): JSX.Element {
-  const SLIDE_VW = 46 // slide width as a percentage of viewport width for stronger peek effect
+  const SLIDE_VW = 56 // slide width as a percentage of viewport width for stronger peek effect
   // Refs for DOM elements and scroll state
   const sectionRef = useRef<HTMLElement>(null)
   const stickyInnerRef = useRef<HTMLDivElement>(null)
@@ -298,7 +298,7 @@ export function Materials(): JSX.Element {
                 <div
                   key={slide.id}
                   className="scroll-slide flex-shrink-0"
-                  style={{ width: '46vw' }}
+                  style={{ width: '56vw' }}
                 >
                 <div className="text-center px-2">
                   {/* Logo */}
