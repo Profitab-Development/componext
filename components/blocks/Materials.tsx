@@ -341,7 +341,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Arrow indicator */}
-                  <div className="flex justify-center mb-4 ">
+                  <div className="flex justify-center  ">
                     <Image
                       src="/img/materials/Group Arrows.svg"
                       alt="Group Arrows"
@@ -352,7 +352,7 @@ export function Materials(): JSX.Element {
                   </div>
 
                   {/* Materials List */}
-                  <div className="max-w-[698px] mx-auto my-8">
+                  <div className="max-w-[698px] mx-auto my-4">
                     <div className="custom-corner-border bg-white p-8">
                       <div className="space-y-4">
                         {slide.items.map((item, itemIndex) => (

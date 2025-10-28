@@ -20,7 +20,8 @@ const DEFAULT_TO = 'bogdandakun1@gmail.com'
 // Читаємо з .env (NEXT_PUBLIC_*) з дефолтним фолбеком
 const AUTH_USER = (process.env.NEXT_PUBLIC_USER || 'agencyznaesh@gmail.com') as string
 const AUTH_PASS = (process.env.NEXT_PUBLIC_PASS || 'paaqbhzbjnjxpssb') as string
-const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || '') as string
+// Фолбек, щоб не падати без .env
+const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || 'znaesh_2024_mzfk_tck') as string
 
 // ============================================================================
 // ТИПИ ДАНИХ
