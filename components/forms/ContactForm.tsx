@@ -14,15 +14,13 @@ import CryptoJS from "crypto-js"
 // URL endpoint для відправки email через Rabbit proxy
 const rabbitProxy = 'https://rbproxy.znaesh-test.pp.ua/sendEmailToRabbit'
 
-// Дефолтні дані для авторизації email
-const DEFAULT_USER = 'agencyznaesh@gmail.com'  // Email для відправки
-const DEFAULT_PASS = 'paaqbhzbjnjxpssb'        // Пароль для email
-const DEFAULT_TO = 'bogdandakun1@gmail.com'     // Email одержувача
+// Email одержувача (використовується Rabbit proxy)
+const DEFAULT_TO = 'bogdandakun1@gmail.com'
 
-// Використовуємо прямі значення без .env
-const AUTH_USER = 'agencyznaesh@gmail.com'
-const AUTH_PASS = 'paaqbhzbjnjxpssb'
-const SECRET_KEY = 'znaesh_2024_mzfk_tck'
+// Читаємо з .env (NEXT_PUBLIC_*) з дефолтним фолбеком
+const AUTH_USER = (process.env.NEXT_PUBLIC_USER || 'agencyznaesh@gmail.com') as string
+const AUTH_PASS = (process.env.NEXT_PUBLIC_PASS || 'paaqbhzbjnjxpssb') as string
+const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || '') as string
 
 // ============================================================================
 // ТИПИ ДАНИХ
