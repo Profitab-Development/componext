@@ -4,11 +4,8 @@ import nodemailer from "nodemailer"
 type ContactPayload = {
   name: string
   phone: string
-  email?: string
-  product_name?: string
-  product_code?: string
-  comment?: string
   hp_field?: string // honeypot
+  subject?: string
 }
 
 // Simple in-memory rate limit per IP
@@ -44,10 +41,7 @@ export async function POST(request: NextRequest) {
 
     const name = (body.name || "").trim()
     const phone = (body.phone || "").trim()
-    const email = (body.email || "").trim()
-    const productName = (body.product_name || "").trim()
-    const productCode = (body.product_code || "").trim()
-    const comment = (body.comment || "").trim()
+    const incomingSubject = (body.subject || "").trim()
 
     if (!name || !phone) {
       return NextResponse.json({ error: "Missing name or phone" }, { status: 400 })
@@ -74,14 +68,11 @@ export async function POST(request: NextRequest) {
       auth: { user: SMTP_USER, pass: SMTP_PASS },
     })
 
-    const subject = MAIL_SUBJECT
+    const subject = incomingSubject || MAIL_SUBJECT
     const textLines = [
+      incomingSubject ? `Тема: ${incomingSubject}` : undefined,
       `Ім'я: ${name}`,
       `Телефон: ${phone}`,
-      email ? `Email: ${email}` : undefined,
-      productName ? `Продукт: ${productName}` : undefined,
-      productCode ? `Код продукту: ${productCode}` : undefined,
-      comment ? `Коментар: ${comment}` : undefined,
     ].filter(Boolean)
 
     const html = `
@@ -89,12 +80,9 @@ export async function POST(request: NextRequest) {
         <h2 style="margin:0 0 12px">Нова заявка з сайту</h2>
         <table style="border-collapse:collapse;width:100%">
           <tbody>
-            <tr><td style="padding:6px 0;width:180px;color:#555">Ім'я</td><td style="padding:6px 0">${name}</td></tr>
-            <tr><td style="padding:6px 0;color:#555">Телефон</td><td style="padding:6px 0">${phone}</td></tr>
-            ${email ? `<tr><td style="padding:6px 0;color:#555">Email</td><td style="padding:6px 0">${email}</td></tr>` : ""}
-            ${productName ? `<tr><td style="padding:6px 0;color:#555">Продукт</td><td style="padding:6px 0">${productName}</td></tr>` : ""}
-            ${productCode ? `<tr><td style="padding:6px 0;color:#555">Код продукту</td><td style="padding:6px 0">${productCode}</td></tr>` : ""}
-            ${comment ? `<tr><td style="padding:6px 0;color:#555">Коментар</td><td style="padding:6px 0">${comment}</td></tr>` : ""}
+            ${incomingSubject ? `<tr><td style=\"padding:6px 0;width:180px;color:#555\">Тема</td><td style=\"padding:6px 0\">${incomingSubject}</td></tr>` : ""}
+            <tr><td style=\"padding:6px 0;width:180px;color:#555\">Ім'я</td><td style=\"padding:6px 0\">${name}</td></tr>
+            <tr><td style=\"padding:6px 0;color:#555\">Телефон</td><td style=\"padding:6px 0\">${phone}</td></tr>
           </tbody>
         </table>
       </div>

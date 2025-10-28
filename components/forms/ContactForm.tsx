@@ -79,19 +79,16 @@ export function ContactForm() {
   // Відстежуємо зміни поля衡量 name для динамічної валідації
   const watchedName = watch('name', '')
   
-  // Логування змін стану
-  console.log('[ContactForm] State:', { phone, isValid, watchedName, isSubmitting, submitStatus })
+  // Логи стану прибрані — залишаємо тільки статус OK/ERROR у сабміті
 
   // ============================================================================
   // ОБРОБНИК ВІДПРАВКИ ФОРМИ
   // ============================================================================
   const onSubmit = async (data: FormData) => {
-    console.log('[ContactForm] onSubmit called:', data)
     const { name } = data
     
     // Якщо ім'я або телефон не валідні - не відправляємо
     if (!name || !isValid) {
-      console.log('[ContactForm] Validation failed:', { name, isValid })
       return
     }
     
@@ -115,45 +112,26 @@ export function ContactForm() {
         JSON.stringify(authData),
         SECRET_KEY
       ).toString()
-      console.log('[ContactForm] Encrypted auth length:', authDataEncrypt.length)
 
       // Формуємо FormData з полями форми
       const formData = new FormData()
-      formData.append('name', name)
-      formData.append('phone', phone)
+      formData.append('Name:', name)
+      formData.append('Phone:', phone)
       formData.append('authData', authDataEncrypt)
-      console.log('[ContactForm] FormData prepared:', { name, phone })
-      // опціонально: email якщо є поле у формі з name="email"
-      try {
-        const emailInput = document.querySelector<HTMLInputElement>('input[name="email"]')
-        if (emailInput && emailInput.value) {
-          formData.append('email', emailInput.value)
-        }
-      } catch {}
-      // опціонально: файл якщо існує інпут name="mailFiles"
-      try {
-        const fileInput = document.querySelector<HTMLInputElement>('input[name="mailFiles"]')
-        if (fileInput && fileInput.files && fileInput.files.length > 0) {
-          // відправляємо тільки перший файл відповідно до прикладу
-          formData.append('mailFiles', fileInput.files[0])
-        }
-      } catch {}
+      
 
       // Надсилаємо на Rabbit proxy
-      console.log('[ContactForm] Sending POST to:', rabbitProxy)
       const res = await fetch(rabbitProxy, {
         method: 'POST',
         body: formData,
       })
       
-      // Перевіряємо чи запит успі同样ий
-      console.log('[ContactForm] Response status:', res.status, res.statusText)
+      // Перевіряємо чи запит успішний
       if (!res.ok) {
         const errorText = await res.text().catch(() => '')
-        console.error('[ContactForm] Rabbit proxy error:', res.status, res.statusText, errorText)
         throw new Error('Send failed')
       }
-      console.log('[ContactForm] Success! Response OK')
+      console.log('[ContactForm] OK')
       
       // Очищаємо форму після успішної відправки
       reset()
@@ -178,8 +156,8 @@ export function ContactForm() {
       // Редірект прибрано за вимогою — залишаємо користувача на поточній сторінці
       
     } catch (err) {
-      // Показуємо повідомлення про помилку
-      console.error('[ContactForm] Submit error:', err)
+      // Показуємо повідомлення про помилку — логуємо лише статус ERROR
+      console.error('[ContactForm] ERROR', err)
       setSubmitStatus('error')
     } finally {
       // Вимикаємо стан "відправляємо..." в будь-якому випадку
@@ -397,7 +375,6 @@ export function ContactForm() {
               type="submit"
               disabled={isSubmitting || !isValid || !watchedName}
               onClick={(e) => {
-                console.log('Button click:', { isSubmitting, isValid, watchedName, submitStatus })
                 if (isSubmitting || !isValid || !watchedName) {
                   e.preventDefault()
                 }
