@@ -19,10 +19,10 @@ const DEFAULT_USER = 'agencyznaesh@gmail.com'  // Email для відправк�
 const DEFAULT_PASS = 'paaqbhzbjnjxpssb'        // Пароль для email
 const DEFAULT_TO = 'bogdandakun1@gmail.com'     // Email одержувача
 
-// Читаємо змінні середовища, якщо вони є, інакше використовуємо дефолтні
-const AUTH_USER = (process.env.NEXT_PUBLIC_USER || process.env.REACT_APP_USER || DEFAULT_USER) as string
-const AUTH_PASS = (process.env.NEXT_PUBLIC_PASS || process.env.REACT_APP_PASS || DEFAULT_PASS) as string
-const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || process.env.REACT_APP_SECRET_KEY || "") as string
+// Використовуємо прямі значення без .env
+const AUTH_USER = 'agencyznaesh@gmail.com'
+const AUTH_PASS = 'paaqbhzbjnjxpssb'
+const SECRET_KEY = 'znaesh_2024_mzfk_tck'
 
 // ============================================================================
 // ТИПИ ДАНИХ
@@ -115,9 +115,10 @@ export function ContactForm() {
 
       // Формуємо FormData з полями форми
       const formData = new FormData()
-      formData.append('Name:', name)
-      formData.append('Phone:', phone)
+      formData.append('name', name)
+      formData.append('phone', phone)
       formData.append('authData', authDataEncrypt)
+      
       
 
       // Надсилаємо на Rabbit proxy
@@ -128,7 +129,6 @@ export function ContactForm() {
       
       // Перевіряємо чи запит успішний
       if (!res.ok) {
-        const errorText = await res.text().catch(() => '')
         throw new Error('Send failed')
       }
       console.log('[ContactForm] OK')
