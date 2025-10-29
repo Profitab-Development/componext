@@ -22,6 +22,10 @@ jobs:
         node-version: 20
         
     - name: Install dependencies and build project
+      env:
+        NEXT_PUBLIC_SECRET_KEY: ${{ secrets.NEXT_PUBLIC_SECRET_KEY }}
+        NEXT_PUBLIC_USER: ${{ secrets.NEXT_PUBLIC_USER }}
+        NEXT_PUBLIC_PASS: ${{ secrets.NEXT_PUBLIC_PASS }}
       run: |
         npm install
         npm run build
