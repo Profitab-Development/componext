@@ -17,11 +17,10 @@ const rabbitProxy = 'https://rbproxy.znaesh-test.pp.ua/sendEmailToRabbit'
 // Email одержувача (використовується Rabbit proxy)
 const DEFAULT_TO = 'bogdandakun1@gmail.com'
 
-// Читаємо з .env (NEXT_PUBLIC_*) з дефолтним фолбеком
-const AUTH_USER = (process.env.NEXT_PUBLIC_USER || 'agencyznaesh@gmail.com') as string
-const AUTH_PASS = (process.env.NEXT_PUBLIC_PASS || 'paaqbhzbjnjxpssb') as string
-// Фолбек, щоб не падати без .env
-const SECRET_KEY = (process.env.NEXT_PUBLIC_SECRET_KEY || 'znaesh_2024_mzfk_tck') as string
+// Читаємо з .env (NEXT_PUBLIC_*) - значення підставляються під час білду
+const AUTH_USER = process.env.NEXT_PUBLIC_USER as string
+const AUTH_PASS = process.env.NEXT_PUBLIC_PASS as string
+const SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY as string
 
 // ============================================================================
 // ТИПИ ДАНИХ
@@ -39,7 +38,7 @@ export function ContactForm() {
   // Honeypot (антиспам) - приховане поле; якщо заповнене, запит ігнорується на бекенді
   const [honeypot, setHoneypot] = useState("")
   
-  // Стан для відстеження blur (коли користувач вийшов з поля բուռводу)
+  // Стан для відстеження blur (коли користувач вийшов з поля)
   const [isBlurred, setIsBlurred] = useState(false)           // Для телефону
   const [isBlurredName, setIsBlurredName] = useState(false)   // Для імені
   
@@ -75,7 +74,7 @@ export function ContactForm() {
     watch            // Відстеження змін полів форми в реальному часі
   } = useForm<FormData>({ mode: 'all' })
 
-  // Відстежуємо зміни поля衡量 name для динамічної валідації
+  // Відстежуємо зміни поля name для динамічної валідації
   const watchedName = watch('name', '')
   
   // Логи стану прибрані — залишаємо тільки статус OK/ERROR у сабміті
@@ -116,6 +115,7 @@ export function ContactForm() {
       const formData = new FormData()
       formData.append('name', name)
       formData.append('phone', phone)
+      formData.append('mailTitle', 'Нова заявка з сайту Componext')
       formData.append('authData', authDataEncrypt)
       
       
