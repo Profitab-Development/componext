@@ -23,7 +23,7 @@ export const Applications = memo(() => {
     },
     {
       id: 3,
-      title: "Чемодан Aero Carbon",
+      title: "Валіза Aero Carbon",
       description: "",
       background: "/img/applications/Slide=3.webp"
     },
