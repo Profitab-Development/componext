@@ -15,7 +15,7 @@ import CryptoJS from "crypto-js"
 const rabbitProxy = 'https://rbproxy.znaesh-test.pp.ua/sendEmailToRabbit'
 
 // Email одержувача (використовується Rabbit proxy)
-const DEFAULT_TO = 'bogdandakun1@gmail.com'
+const DEFAULT_TO = 'info@componext.com.ua'
 
 // Читаємо з .env (NEXT_PUBLIC_*) - значення підставляються під час білду
 const AUTH_USER = process.env.NEXT_PUBLIC_USER as string
