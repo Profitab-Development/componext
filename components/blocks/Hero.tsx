@@ -33,7 +33,7 @@ export function Hero(): JSX.Element {
 
 
       {/* Content */}
-      <div className="relative z-10 container-1320 px-4 text-left flex flex-col justify-end pb-[60px] h-full">
+      <div className="relative z-10 container-1320 px-4 text-left flex flex-col justify-end pb-[120px] h-full">
         <div className="max-w-[770px]">
           <h1 className="text-[52px] font-bold leading-[130%] mb-6 bg-gradient-to-r from-blue-400 to-blue-700 bg-clip-text text-transparent" style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}>
             Інноваційні термопластичні композитні матеріали
