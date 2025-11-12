@@ -54,52 +54,53 @@ export function MaterialsForUse(): JSX.Element {
     },
     {
       image: "/img/materials-for-use/Image Frame1.webp",
-      title: "Термопластичні еластомери",
-      description: "До 65% скловолокон; жорсткість і довговічність."
+      title: "Термопластичні гранули",
+      description: "Армовані до 65% скловолокном."
     },
+    // {
+    //   image: "/img/materials-for-use/Image Frame2.webp",
+    //   title: "Вуглецеве волокно",
+    //   description: "Поєднання карбонових і скловолокон; легкість і жорсткість + ударостійкість."
+    // },
     {
-      image: "/img/materials-for-use/Image Frame2.webp",
-      title: "Вуглецеве волокно",
-      description: "Поєднання карбонових і скловолокон; легкість і жорсткість + ударостійкість."
-    },{
       image: "/img/materials-for-use/Image Frame4.webp",
-      title: "XEGREEN 3DP",
-      description: "Екологічні композити з перероблених полімерів."
+      title: "Thermhex",
+      description: "Термопластичні поліпропіленові плити з сотовою структурою"
     },
-    {
-      image: "/img/materials-for-use/Image Frame-1.webp",
-      title: "XECARB HM 3DP",
-      description: "Високомодульне карбонове волокно для підвищеної міцності."
-    },
+    // {
+    //   image: "/img/materials-for-use/Image Frame-1.webp",
+    //   title: "XECARB HM 3DP",
+    //   description: "Високомодульне карбонове волокно для підвищеної міцності."
+    // },
     {
       image: "/img/materials-for-use/Image Frame-2.webp",
-      title: "XECARB SL 3DP",
-      description: "Надлегкі матеріали для дронів і робототехніки."
+      title: "Thermhex",
+      description: "Термопластичні сендвіч-панелі, покриті скловолокном"
     },{
       image: "/img/materials-for-use/Image Frame-3.webp",
-      title: "XECARB ST 3DP",
+      title: "XECARB",
       description: "Надміцні композити для високих навантажень."
     },
     {
       image: "/img/materials-for-use/Image Frame-4.webp",
-      title: "XELIGHT 3DP",
-      description: "Легкі й еластичні рішення для спорту та мобільності."
+      title: "Xecarb 3DR",
+      description: "Армовані пластики для широкоформатного 3D друку"
     },
     {
       image: "/img/materials-for-use/Image Frame-5.webp",
       title: "XERAMIC 3DP",
-      description: "Керамічні наповнювачі для теплопровідності й зносостійкості."
+      description: "Пластики, армовані керамікою для теплопровідності і зносостійкості"
     },
     {
       image: "/img/materials-for-use/Image Frame-6.webp",
       title: "XEGREEN BIO 3DP",
       description: "Біо- та рециклінг-лінійка з відновлюваної сировини."
     },
-    {
-      image: "/img/materials-for-use/Image Frame-7.webp",
-      title: "Гібридні тканини",
-      description: "Поєднання карбону, скла та араміду для балансу характеристик."
-    },
+    // {
+    //   image: "/img/materials-for-use/Image Frame-7.webp",
+    //   title: "Гібридні тканини",
+    //   description: "Поєднання карбону, скла та араміду для балансу характеристик."
+    // },
     {
       image: "/img/materials-for-use/Image Frame-8.webp",
       title: "Сотові панелі ThermHex",

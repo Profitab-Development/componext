@@ -41,28 +41,28 @@ export function WhoWeAre(): JSX.Element {
         </div>
         
         {/* Three Column Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          {/* Column 1 - Xenia */}
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+           
           <div>
             <p className="text-[17px] font-normal leading-[130%] text-[#52525B] font-mono">
               Xenia – армовані термопластичні композити для лиття під тиском і 3D-друку (PEEK, PESU, PEI, ABS і понад 100 сплавів для різних застосувань).
             </p>
           </div>
           
-          {/* Column 2 - Siltex */}
+           
           <div>
             <p className="text-[17px] font-normal leading-[130%] text-[#52525B] font-mono">
               Siltex – рукави, стрічки та шнури з гібридних термопластичних волокон, армовані карбоном, склом.
             </p>
           </div>
           
-          {/* Column 3 - ThermHex */}
+          
           <div>
             <p className="text-[17px] font-normal leading-[130%] text-[#52525B] font-mono">
               ThermHex – легкі, міцні, універсальні у використанні термопластичні поліпропіленові панелі з сотовою структурою, з можливою ламінацією веглеволокном або скловолокном.
             </p>
           </div>
-        </div>
+        </div> */}
         
       </div>
     </section>
