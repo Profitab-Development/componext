@@ -64,7 +64,7 @@ export function MaterialsForUse(): JSX.Element {
     // },
     {
       image: "/img/materials-for-use/Image Frame4.webp",
-      title: "Thermhex",
+      title: "ThermHex",
       description: "Термопластичні поліпропіленові плити з сотовою структурою"
     },
     // {
@@ -74,7 +74,7 @@ export function MaterialsForUse(): JSX.Element {
     // },
     {
       image: "/img/materials-for-use/Image Frame-2.webp",
-      title: "Thermhex",
+      title: "ThermHex",
       description: "Термопластичні сендвіч-панелі, покриті скловолокном"
     },{
       image: "/img/materials-for-use/Image Frame-3.webp",
@@ -83,7 +83,7 @@ export function MaterialsForUse(): JSX.Element {
     },
     {
       image: "/img/materials-for-use/Image Frame-4.webp",
-      title: "Xecarb 3DR",
+      title: "XECARB 3DR",
       description: "Армовані пластики для широкоформатного 3D друку"
     },
     {
