@@ -1,59 +1,848 @@
+// 'use client'
+//
+// import type { JSX } from "react"
+// import Image from "next/image"
+// import { useState, useEffect, useRef } from "react"
+//
+// export function Materials(): JSX.Element {
+//   const SLIDE_VW = 56 // slide width as a percentage of viewport width for stronger peek effect
+//   // Refs for DOM elements and scroll state
+//   const sectionRef = useRef<HTMLElement>(null)
+//   const stickyInnerRef = useRef<HTMLDivElement>(null)
+//   const [scrollProgress, setScrollProgress] = useState(0) // 0 to 1
+//   const rafIdRef = useRef<number | null>(null)
+//   const isActiveRef = useRef(false) // Whether the section is active/pinned
+//
+//   // Material slides data
+//   const slides = [
+//     {
+//       id: 1,
+//       title: "Xenia (Італія) – армовані термопластичні композити для лиття під тиском та 3D-друку:",
+//       logo: "/img/materials/logo-3.webp",
+//       items: [
+//         "PEEK, PESU, PEI, ABS і понад 100 сплавів для різних застосувань",
+//         "Легкі та надміцні матеріали на основі вуглецевого та скловолокна.",
+//         "Високотемпературні та біозасновані рішення.",
+//         "Економія до 50% матеріалу та в 2 рази менше часу виробництва.",
+//         "Застосування: авіація, автоспорт, оборона, нафтогаз, прототипування, форми."
+//       ]
+//     },
+//     {
+//       id: 2,
+//       title: "ThermHex (Німеччина) – нове покоління наповнювачів із сотовою структурою для сендвіч-панелей.",
+//       logo: "/img/materials/logo-2.webp",
+//       items: [
+//         "Можливість ламінації вуглеволокном або скловолокном.",
+//         "Легкі та жорсткі панелі з поліпропілену.",
+//         "Термопластичні панелі можуть набувати складних форм.",
+//         "Унікальна технологія EconCore з безперервним виробництвом.",
+//         "Можливість покриття поверхні майже будь-якою тканиною.",
+//         "Зниження ваги конструкції при збереженні міцності.",
+//         "Економія сировини та скорочення викидів CO₂."
+//       ]
+//     },
+//     {
+//       id: 3,
+//       title: "Siltex (Німеччина) – інноваційні плетені матеріали:",
+//       logo: "/img/materials/logo-1.webp",
+//       items: [
+//         "Композитні рукави, стрічки, шнури з унікальною плетеною структурою, що надає матеріалам виключну міцність за низької ваги.",
+//         "Термопластична матриця із поліаміду, армування вуглеволокном чи скловолокном.",
+//         "Застосування: легкі конструкції, захист, ізоляція, композитні вироби, авіація, автомобілебудування."
+//       ]
+//     }
+//   ]
+//
+//   // Throttle function for scroll events
+//   const throttle = (func: () => void, delay: number) => {
+//     let timeoutId: NodeJS.Timeout | null = null
+//     let lastRun = 0
+//     return () => {
+//       const now = Date.now()
+//       if (now - lastRun >= delay) {
+//         func()
+//         lastRun = now
+//       } else {
+//         if (timeoutId) clearTimeout(timeoutId)
+//         timeoutId = setTimeout(() => {
+//           func()
+//           lastRun = Date.now()
+//         }, delay - (now - lastRun))
+//       }
+//     }
+//   }
+//
+//   // Calculate scroll progress within the section (0 to 1)
+//   const calculateScrollProgress = () => {
+//     const section = sectionRef.current
+//     if (!section) return 0
+//
+//     const rect = section.getBoundingClientRect()
+//     const windowHeight = window.innerHeight
+//     const sectionHeight = rect.height
+//
+//     // Calculate where we are in the scroll journey
+//     // pinStart: when the section becomes fully pinned (sectionTop exactly equals sticky top value, which is -50px)
+//     // pinEnd: when we need to stop horizontal scrolling (when last card is centered)
+//     const sectionTop = rect.top
+//
+//     // Only start horizontal scrolling when the section is FULLY pinned
+//     // The sticky starts at top:-50px, so we check if sectionTop is <= -50
+//     const isPinned = sectionTop <= -50
+//
+//     if (!isPinned) {
+//       // Section is still entering - no horizontal scroll yet
+//       return 0
+//     }
+//
+//     // Calculate how much vertical scrolling distance is available
+//     // This is the distance the section can scroll while staying pinned
+//     const stickyDistance = sectionHeight - windowHeight // How much room for scrolling while pinned
+//
+//     if (stickyDistance <= 0) {
+//       return 0
+//     }
+//
+//     // Calculate how much of the sticky distance has been scrolled
+//     // When sectionTop = -50, we're at the start (scrolledPastPin = 0)
+//     // When we've scrolled further, scrolledPastPin increases
+//     const scrolledPastPin = -50 - sectionTop
+//
+//     // Add a "dead zone" at the start - first 10% of scroll is for reading first card
+//     // Only the remaining 90% (minus end dead zone) is used for horizontal scrolling
+//     const deadZone = stickyDistance * 0.1
+//
+//     if (scrolledPastPin <= deadZone) {
+//       // Still in dead zone - first card stays visible
+//       return 0
+//     }
+//
+//     // Check if we're in the end dead zone
+//     const endDeadZone = stickyDistance * 0.1
+//     const maxScrollableDistance = stickyDistance - deadZone - endDeadZone
+//
+//     if (scrolledPastPin >= stickyDistance - endDeadZone) {
+//       // Reached end dead zone - last card stays visible
+//       return 1
+//     }
+//
+//     // Calculate progress within the scrollable zone only
+//     // scrolledPastPin - deadZone gives us how far into scrollable zone we are
+//     let progress = (scrolledPastPin - deadZone) / maxScrollableDistance
+//
+//     // Clamp between 0 and 1
+//     progress = Math.max(0, Math.min(1, progress))
+//
+//     return progress
+//   }
+//
+//   // Update animations based on scroll progress
+//   const updateAnimations = (progress: number) => {
+//     const stickyInner = stickyInnerRef.current
+//     if (!stickyInner) return
+//
+//     // Find the horizontal container for slides
+//     const container = stickyInner.querySelector('.slides-container') as HTMLElement
+//     if (!container) return
+//
+//     // Calculate translate based on scroll progress
+//     const windowWidth = window.innerWidth
+//     const slideCount = slides.length
+//
+//     // Compute slide width in px based on SLIDE_VW and center offset
+//     const slideWidthPx = windowWidth * (SLIDE_VW / 100)
+//     const centerOffset = (windowWidth - slideWidthPx) / 2
+//
+//     // To center the last slide, we need to scroll (slides.length - 1) slide widths
+//     const maxTranslate = (slideCount - 1) * slideWidthPx
+//
+//     // Progress: 0 = first slide centered, 1 = last slide centered
+//     const translateX = centerOffset + (-progress * maxTranslate)
+//
+//     container.style.transform = `translateX(${translateX}px)`
+//     container.style.transition = 'none' // Disable transitions for smooth scrolling
+//
+//     // Update step indicator
+//     const currentSlide = Math.floor(progress * (slideCount - 1))
+//     const stepIndicator = stickyInner.querySelector('.step-indicator')
+//     if (stepIndicator) {
+//       stepIndicator.textContent = `Крок ${Math.min(currentSlide + 1, slideCount)}/${slideCount}`
+//     }
+//   }
+//
+//   // Main scroll handler
+//   useEffect(() => {
+//     const section = sectionRef.current
+//     if (!section) return
+//
+//     // IntersectionObserver: Detect when section enters/leaves viewport
+//     const observer = new IntersectionObserver(
+//       (entries) => {
+//         entries.forEach((entry) => {
+//           // Section is considered active when it's mostly visible in viewport
+//           isActiveRef.current = entry.isIntersecting && entry.intersectionRatio > 0.3
+//
+//           // Start/stop animation loop based on visibility
+//           if (isActiveRef.current && rafIdRef.current === null) {
+//             const animate = () => {
+//               const progress = calculateScrollProgress()
+//               setScrollProgress(progress)
+//               updateAnimations(progress)
+//
+//               if (isActiveRef.current) {
+//                 rafIdRef.current = requestAnimationFrame(animate)
+//               } else {
+//                 rafIdRef.current = null
+//               }
+//             }
+//             rafIdRef.current = requestAnimationFrame(animate)
+//           }
+//         })
+//       },
+//       {
+//         threshold: [0, 0.3, 0.5, 0.7, 1.0] // Multiple thresholds for smooth activation
+//       }
+//     )
+//
+//     observer.observe(section)
+//
+//     // Handle scroll events for updating progress
+//     const handleScroll = throttle(() => {
+//       const progress = calculateScrollProgress()
+//       setScrollProgress(progress)
+//
+//       // Update animations
+//       if (rafIdRef.current === null && isActiveRef.current) {
+//         updateAnimations(progress)
+//       }
+//     }, 16) // ~60fps
+//
+//     window.addEventListener('scroll', handleScroll, { passive: true })
+//
+//     // Handle window resize
+//     const handleResize = throttle(() => {
+//       const progress = calculateScrollProgress()
+//       setScrollProgress(progress)
+//       updateAnimations(progress)
+//     }, 100)
+//
+//     window.addEventListener('resize', handleResize)
+//
+//     // Cleanup
+//     return () => {
+//       observer.disconnect()
+//       window.removeEventListener('scroll', handleScroll)
+//       window.removeEventListener('resize', handleResize)
+//       if (rafIdRef.current) {
+//         cancelAnimationFrame(rafIdRef.current)
+//         rafIdRef.current = null
+//       }
+//     }
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [])
+//
+//   // Update animations whenever scrollProgress changes
+//   useEffect(() => {
+//     updateAnimations(scrollProgress)
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [scrollProgress])
+//
+//   return (
+//     <section
+//       id="materials"
+//       ref={sectionRef}
+//       className="relative w-full"
+//       style={{ height: `${(slides.length + 1) * 100}vh` }}
+//     >
+//       {/* Title Section - normal scroll */}
+//       <div className="container-1320 px-4 pt-[100px]">
+//         <div className="flex items-center gap-3 pb-6">
+//             <Image
+//               src="/img/materials/Icon Title.svg"
+//               alt="Materials Icon"
+//               width={36}
+//               height={36}
+//               unoptimized={true}
+//             />
+//             <h2
+//               className="text-[21px] font-medium leading-[100%] text-center text-[#3B82F6]"
+//               style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}
+//             >
+//               Матеріали та напівфабрикати
+//             </h2>
+//             </div>
+//
+//             {/* Divider Line */}
+//             <div className="w-full border-b border-zinc-200 mb-6"></div>
+//
+//             {/* Description Text */}
+//             <div className="mb-8 text-center">
+//             <p
+//               className="text-lg font-normal leading-[130%] tracking-[0%] text-[#52525B]"
+//               style={{ fontFamily: "Roboto Mono, monospace" }}
+//             >
+//               Ми пропонуємо не просто сировину, а готові технологічні рішення<br />
+//               для найвибагливіших галузей:
+//             </p>
+//         </div>
+//       </div>
+//
+//       {/* Sticky container - only for cards */}
+//       <div className="sticky top-[0px] min-h-[calc(100vh-200px)] flex items-start bg-white overflow-hidden pt-[148px] pb-[100px]">
+//         <div ref={stickyInnerRef} className="w-full flex flex-col">
+//           {/* Scroll-triggered content container */}
+//           <div className="relative flex-1 flex items-center w-full">
+//             {/* Horizontal scroll wrapper - hides overflow */}
+//             <div className="overflow-x-hidden w-full">
+//             {/* Horizontal container for all slides */}
+//             <div className="slides-container flex" style={{ willChange: 'transform' }}>
+//               {slides.map((slide, index) => (
+//                 <div
+//                   key={slide.id}
+//                   className="scroll-slide flex-shrink-0"
+//                   style={{ width: '56vw' }}
+//                 >
+//                 <div className="text-center px-2">
+//                   {/* Logo */}
+//                   <div className="flex justify-center mb-6">
+//                     <Image
+//                       src={slide.logo}
+//                       alt={`${slide.title} Logo`}
+//                       width={210}
+//                       height={63}
+//                       priority={index === 0}
+//                       draggable={false}
+//                       className="select-none h-10 w-auto md:h-12"
+//                     />
+//                   </div>
+//
+//                   {/* Title */}
+//                   <div className="mb-4">
+//                     <p
+//                       className="text-center text-lg font-normal leading-[130%] tracking-[0%] text-[#3F3F46]"
+//                       style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
+//                     >
+//                       {slide.title}
+//                     </p>
+//                   </div>
+//
+//                   {/* Button */}
+//                   <div className="flex justify-center  mb-4">
+//                     <a
+//                       href="#contacts"
+//                       className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
+//                     >
+//                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat z-10 rounded-full"></div>
+//                       <span
+//                         className="relative z-20 text-[#3B82F6] group-hover:text-[#2563EB] transition-colors duration-300 font-bold text-base leading-[100%] tracking-[0%]"
+//                         style={{ fontFamily: "Roboto Mono, monospace" }}
+//                       >
+//                         Консультація
+//                       </span>
+//                     </a>
+//                   </div>
+//
+//                   {/* Arrow indicator */}
+//                   <div className="flex justify-center  ">
+//                     <Image
+//                       src="/img/materials/Group Arrows.svg"
+//                       alt="Group Arrows"
+//                       width={12}
+//                       height={64}
+//
+//                     />
+//                   </div>
+//
+//                   {/* Materials List */}
+//                   <div className="max-w-[698px] mx-auto my-4">
+//                     <div className="custom-corner-border bg-white p-8">
+//                       <div className="space-y-4">
+//                         {slide.items.map((item, itemIndex) => (
+//                           <div key={itemIndex} className="flex items-start gap-4">
+//                             <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+//                             <div className="flex-1">
+//                               <p
+//                                 className="text-base font-normal tracking-[0%] text-[#71717A] text-left"
+//                                 style={{ fontFamily: "Roboto Mono, monospace" }}
+//                               >
+//                                 {item}
+//                               </p>
+//                             </div>
+//                           </div>
+//                         ))}
+//                       </div>
+//                       <span className="corner-bl"></span>
+//                       <span className="corner-br"></span>
+//                       <span className="bottom-line"></span>
+//                     </div>
+//                   </div>
+//                 </div>
+//                 </div>
+//               ))}
+//             </div>
+//             </div>
+//           </div>
+//
+//           {/* Step indicator */}
+//           <div className="container-1320 px-4">
+//           <div className="flex justify-center mt-8">
+//             <span
+//               className="step-indicator px-4 py-2 rounded-full text-lg font-normal leading-[100%] tracking-[0%] text-center text-[#A1A1AA]"
+//               style={{ fontFamily: "Roboto Mono, monospace" }}
+//             >
+//               Крок 1/{slides.length}
+//             </span>
+//           </div>
+//           </div>
+//
+//         </div>
+//       </div>
+//     </section>
+//   )
+// }
+//
+
+// 'use client'
+//
+// import type { JSX } from 'react'
+// import Image from 'next/image'
+// import { useState, useEffect, useRef } from 'react'
+//
+// export function Materials(): JSX.Element {
+//   const sectionRef = useRef<HTMLElement | null>(null)
+//   const stickyInnerRef = useRef<HTMLDivElement | null>(null)
+//   const [scrollProgress, setScrollProgress] = useState(0)
+//   const rafIdRef = useRef<number | null>(null)
+//   const isActiveRef = useRef(false)
+//   const [isDesktop, setIsDesktop] = useState(false)
+//
+//   const slides = [
+//     {
+//       id: 1,
+//       title:
+//           'Xenia (Італія) – армовані термопластичні композити для лиття під тиском та 3D-друку:',
+//       logo: '/img/materials/logo-3.webp',
+//       items: [
+//         'PEEK, PESU, PEI, ABS і понад 100 сплавів для різних застосувань',
+//         'Легкі та надміцні матеріали на основі вуглецевого та скловолокна.',
+//         'Високотемпературні та біозасновані рішення.',
+//         'Економія до 50% матеріалу та в 2 рази менше часу виробництва.',
+//         'Застосування: авіація, автоспорт, оборона, нафтогаз, прототипування, форми.',
+//       ],
+//     },
+//     {
+//       id: 2,
+//       title:
+//           'ThermHex (Німеччина) – нове покоління наповнювачів із сотовою структурою для сендвіч-панелей.',
+//       logo: '/img/materials/logo-2.webp',
+//       items: [
+//         'Можливість ламінації вуглеволокном або скловолокном.',
+//         'Легкі та жорсткі панелі з поліпропілену.',
+//         'Термопластичні панелі можуть набувати складних форм.',
+//         'Унікальна технологія EconCore з безперервним виробництвом.',
+//         'Можливість покриття поверхні майже будь-якою тканиною.',
+//         'Зниження ваги конструкції при збереженні міцності.',
+//         'Економія сировини та скорочення викидів CO₂.',
+//       ],
+//     },
+//     {
+//       id: 3,
+//       title: 'Siltex (Німеччина) – інноваційні плетені матеріали:',
+//       logo: '/img/materials/logo-1.webp',
+//       items: [
+//         'Композитні рукави, стрічки, шнури з унікальною плетеною структурою, що надає матеріалам виключну міцність за низької ваги.',
+//         'Термопластична матриця із поліаміду, армування вуглеволокном чи скловолокном.',
+//         'Застосування: легкі конструкції, захист, ізоляція, композитні вироби, авіація, автомобілебудування.',
+//       ],
+//     },
+//   ]
+//
+//   // визначаємо, коли ми на десктопі (щоб не ламати існуючу логіку)
+//   useEffect(() => {
+//     const check = () => {
+//       if (typeof window === 'undefined') return
+//       setIsDesktop(window.innerWidth >= 1024)
+//     }
+//     check()
+//     window.addEventListener('resize', check)
+//     return () => window.removeEventListener('resize', check)
+//   }, [])
+//
+//   // throttle
+//   const throttle = (func: () => void, delay: number) => {
+//     let timeoutId: NodeJS.Timeout | null = null
+//     let lastRun = 0
+//     return () => {
+//       const now = Date.now()
+//       if (now - lastRun >= delay) {
+//         func()
+//         lastRun = now
+//       } else {
+//         if (timeoutId) clearTimeout(timeoutId)
+//         timeoutId = setTimeout(() => {
+//           func()
+//           lastRun = Date.now()
+//         }, delay - (now - lastRun))
+//       }
+//     }
+//   }
+//
+//   // прогрес всередині секції (0..1) — тепер і для моб, і для десктопу
+//   const calculateScrollProgress = () => {
+//     const section = sectionRef.current
+//     if (!section || typeof window === 'undefined') return 0
+//
+//     const rect = section.getBoundingClientRect()
+//     const windowHeight = window.innerHeight
+//     const sectionHeight = rect.height
+//
+//     const sectionTop = rect.top
+//
+//     // зсув старту піну: на десктопі трошки вище (–50px), на мобілі — з 0
+//     const pinStart = isDesktop ? -50 : 0
+//     const isPinned = sectionTop <= pinStart
+//
+//     if (!isPinned) return 0
+//
+//     const stickyDistance = sectionHeight - windowHeight
+//     if (stickyDistance <= 0) return 0
+//
+//     const scrolledPastPin = pinStart - sectionTop
+//
+//     const deadZone = stickyDistance * 0.1
+//     if (scrolledPastPin <= deadZone) return 0
+//
+//     const endDeadZone = stickyDistance * 0.1
+//     const maxScrollableDistance = stickyDistance - deadZone - endDeadZone
+//
+//     if (scrolledPastPin >= stickyDistance - endDeadZone) return 1
+//
+//     let progress = (scrolledPastPin - deadZone) / maxScrollableDistance
+//     progress = Math.max(0, Math.min(1, progress))
+//     return progress
+//   }
+//
+//   // оновлення анімації (горизонтальний рух слайдеру + текст "Крок X/3")
+//   const updateAnimations = (progress: number) => {
+//     const stickyInner = stickyInnerRef.current
+//     if (!stickyInner || typeof window === 'undefined') return
+//
+//     const container = stickyInner.querySelector('.slides-container') as HTMLElement | null
+//     if (!container) return
+//
+//     const windowWidth = window.innerWidth
+//     const slideCount = slides.length
+//
+//     let slideWidthPx: number
+//     let centerOffset: number
+//
+//     if (windowWidth >= 1024) {
+//       // ДЕСKTOP — зберігаємо стару логіку 56vw з пік-ефектом
+//       const SLIDE_VW = 56
+//       slideWidthPx = windowWidth * (SLIDE_VW / 100)
+//       centerOffset = (windowWidth - slideWidthPx) / 2
+//     } else {
+//       // MOBILE — картка на всю ширину, без peek
+//       slideWidthPx = windowWidth
+//       centerOffset = 0
+//     }
+//
+//     const maxTranslate = (slideCount - 1) * slideWidthPx
+//     const translateX = centerOffset + -progress * maxTranslate
+//
+//     container.style.transform = `translateX(${translateX}px)`
+//     container.style.transition = 'none'
+//
+//     const currentSlide = Math.floor(progress * (slideCount - 1))
+//     const stepIndicator = stickyInner.querySelector('.step-indicator')
+//     if (stepIndicator) {
+//       stepIndicator.textContent = `Крок ${Math.min(currentSlide + 1, slideCount)}/${slideCount}`
+//     }
+//   }
+//
+//   // основний scroll/resize + IntersectionObserver — тепер працює й на моб
+//   useEffect(() => {
+//     const section = sectionRef.current
+//     if (!section || typeof window === 'undefined') return
+//
+//     const observer = new IntersectionObserver(
+//         (entries) => {
+//           entries.forEach((entry) => {
+//             isActiveRef.current = entry.isIntersecting && entry.intersectionRatio > 0.3
+//
+//             if (isActiveRef.current && rafIdRef.current === null) {
+//               const animate = () => {
+//                 const progress = calculateScrollProgress()
+//                 setScrollProgress(progress)
+//                 updateAnimations(progress)
+//
+//                 if (isActiveRef.current) {
+//                   rafIdRef.current = requestAnimationFrame(animate)
+//                 } else {
+//                   rafIdRef.current = null
+//                 }
+//               }
+//               rafIdRef.current = requestAnimationFrame(animate)
+//             }
+//           })
+//         },
+//         { threshold: [0, 0.3, 0.5, 0.7, 1] }
+//     )
+//
+//     observer.observe(section)
+//
+//     const handleScroll = throttle(() => {
+//       const progress = calculateScrollProgress()
+//       setScrollProgress(progress)
+//       if (rafIdRef.current === null && isActiveRef.current) {
+//         updateAnimations(progress)
+//       }
+//     }, 16)
+//
+//     const handleResize = throttle(() => {
+//       const progress = calculateScrollProgress()
+//       setScrollProgress(progress)
+//       updateAnimations(progress)
+//     }, 100)
+//
+//     window.addEventListener('scroll', handleScroll, { passive: true })
+//     window.addEventListener('resize', handleResize)
+//
+//     return () => {
+//       observer.disconnect()
+//       window.removeEventListener('scroll', handleScroll)
+//       window.removeEventListener('resize', handleResize)
+//       if (rafIdRef.current) {
+//         cancelAnimationFrame(rafIdRef.current)
+//         rafIdRef.current = null
+//       }
+//     }
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [isDesktop])
+//
+//   useEffect(() => {
+//     updateAnimations(scrollProgress)
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [scrollProgress])
+//
+//   return (
+//       <section
+//           id="materials"
+//           ref={sectionRef}
+//           className="relative w-full bg-white"
+//           style={{ height: `${(slides.length + 1) * 100}vh` }} // запас висоти під анімацію для всіх брейкпоінтів
+//       >
+//         {/* Тайтл + опис — звичайний скрол */}
+//         <div className="container-1320 px-4 pt-[60px] lg:pt-[100px]">
+//           <div className="flex items-center justify-center gap-3 pb-6">
+//             <Image
+//                 src="/img/materials/Icon Title.svg"
+//                 alt="Materials Icon"
+//                 width={36}
+//                 height={36}
+//                 unoptimized={true}
+//             />
+//             <h2
+//                 className="text-[19px] lg:text-[21px] font-medium leading-[100%] text-[#3B82F6] text-center"
+//                 style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}
+//             >
+//               Матеріали та напівфабрикати
+//             </h2>
+//           </div>
+//
+//           <div className="w-full border-b border-zinc-200 mb-6" />
+//
+//           <div className="mb-6 lg:mb-8 text-center">
+//             <p
+//                 className="text-[14px] lg:text-lg font-normal leading-[130%] text-[#52525B]"
+//                 style={{ fontFamily: 'Roboto Mono, monospace' }}
+//             >
+//               Ми пропонуємо не просто сировину, а готові технологічні рішення
+//               <br className="hidden lg:block" />
+//               для найвибагливіших галузей:
+//             </p>
+//           </div>
+//         </div>
+//
+//         {/* Sticky-блок з кроками — одна логіка для моб і десктопу */}
+//         <div className="sticky top-0 bg-white">
+//           <div
+//               ref={stickyInnerRef}
+//               className="w-full flex flex-col min-h-[calc(100vh-140px)] lg:min-h-[calc(100vh-200px)] pb-[60px] lg:pb-[100px]"
+//           >
+//             <div className="relative flex-1 flex items-center w-full">
+//               <div className="overflow-x-hidden w-full">
+//                 <div className="slides-container flex" style={{ willChange: 'transform' }}>
+//                   {slides.map((slide, index) => (
+//                       <div
+//                           key={slide.id}
+//                           className="scroll-slide flex-shrink-0 w-full px-4"
+//                       >
+//                         <div className="max-w-[430px] mx-auto text-center">
+//                           {/* Лого */}
+//                           <div className="flex justify-center mb-5 lg:mb-6">
+//                             <Image
+//                                 src={slide.logo}
+//                                 alt={`${slide.title} Logo`}
+//                                 width={210}
+//                                 height={63}
+//                                 priority={index === 0}
+//                                 draggable={false}
+//                                 className="select-none h-10 w-auto md:h-12"
+//                             />
+//                           </div>
+//
+//                           {/* Тайтл бренду */}
+//                           <p
+//                               className="text-[14px] lg:text-[16px] font-normal leading-[130%] text-[#3F3F46] mb-5 lg:mb-6"
+//                               style={{ fontFamily: "Suisse Intl, system-ui, sans-serif" }}
+//                           >
+//                             {slide.title}
+//                           </p>
+//
+//                           {/* Кнопка */}
+//                           <div className="flex justify-center mb-5 lg:mb-6">
+//                             <a
+//                                 href="#contacts"
+//                                 className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
+//                             >
+//                               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat z-10 rounded-full" />
+//                               <span
+//                                   className="relative z-20 text-[#3B82F6] group-hover:text-[#2563EB] transition-colors duration-300 font-bold text-base leading-[100%]"
+//                                   style={{ fontFamily: 'Roboto Mono, monospace' }}
+//                               >
+//                             Консультація
+//                           </span>
+//                             </a>
+//                           </div>
+//
+//                           {/* Стрілка */}
+//                           <div className="flex justify-center mb-5 lg:mb-6">
+//                             <Image
+//                                 src="/img/materials/Group Arrows.svg"
+//                                 alt="Group Arrows"
+//                                 width={12}
+//                                 height={64}
+//                             />
+//                           </div>
+//
+//                           {/* Список матеріалів */}
+//                           <div className="max-w-[698px] mx-auto">
+//                             <div className="custom-corner-border bg-white p-5 lg:p-8">
+//                               <div className="space-y-4">
+//                                 {slide.items.map((item, itemIndex) => (
+//                                     <div key={itemIndex} className="flex items-start gap-3">
+//                                       <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+//                                       <p
+//                                           className="text-[14px] lg:text-[16px] font-normal leading-[130%] text-left text-[#71717A]"
+//                                           style={{ fontFamily: 'Roboto Mono, monospace' }}
+//                                       >
+//                                         {item}
+//                                       </p>
+//                                     </div>
+//                                 ))}
+//                               </div>
+//                               <span className="corner-bl" />
+//                               <span className="corner-br" />
+//                               <span className="bottom-line" />
+//                             </div>
+//                           </div>
+//                         </div>
+//                       </div>
+//                   ))}
+//                 </div>
+//               </div>
+//             </div>
+//
+//             {/* Індикатор кроку (оновлюється JS) */}
+//             <div className="container-1320 px-4">
+//               <div className="flex justify-center mt-6">
+//               <span
+//                   className="step-indicator px-4 py-2 rounded-full text-[14px] lg:text-lg font-normal leading-[100%] text-center text-[#A1A1AA]"
+//                   style={{ fontFamily: 'Roboto Mono, monospace' }}
+//               >
+//                 Крок 1/{slides.length}
+//               </span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+//   )
+// }
+
+
+
+
 'use client'
 
-import type { JSX } from "react"
-import Image from "next/image"
-import { useState, useEffect, useRef } from "react"
+import type { JSX } from 'react'
+import Image from 'next/image'
+import { useState, useEffect, useRef } from 'react'
 
 export function Materials(): JSX.Element {
-  const SLIDE_VW = 56 // slide width as a percentage of viewport width for stronger peek effect
-  // Refs for DOM elements and scroll state
-  const sectionRef = useRef<HTMLElement>(null)
-  const stickyInnerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0) // 0 to 1
-  const rafIdRef = useRef<number | null>(null)
-  const isActiveRef = useRef(false) // Whether the section is active/pinned
+  const SLIDE_VW = 56 // desktop
 
-  // Material slides data
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const stickyInnerRef = useRef<HTMLDivElement | null>(null)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const rafIdRef = useRef<number | null>(null)
+  const isActiveRef = useRef(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+
   const slides = [
     {
       id: 1,
-      title: "Xenia (Італія) – армовані термопластичні композити для лиття під тиском та 3D-друку:",
-      logo: "/img/materials/logo-3.webp",
+      title:
+          'Xenia (Італія) – армовані термопластичні композити для лиття під тиском та 3D-друку:',
+      logo: '/img/materials/logo-3.webp',
       items: [
-        "PEEK, PESU, PEI, ABS і понад 100 сплавів для різних застосувань",
-        "Легкі та надміцні матеріали на основі вуглецевого та скловолокна.",
-        "Високотемпературні та біозасновані рішення.",
-        "Економія до 50% матеріалу та в 2 рази менше часу виробництва.",
-        "Застосування: авіація, автоспорт, оборона, нафтогаз, прототипування, форми."
-      ]
+        'PEEK, PESU, PEI, ABS і понад 100 сплавів для різних застосувань',
+        'Легкі та надміцні матеріали на основі вуглецевого та скловолокна.',
+        'Високотемпературні та біозасновані рішення.',
+        'Економія до 50% матеріалу та в 2 рази менше часу виробництва.',
+        'Застосування: авіація, автоспорт, оборона, нафтогаз, прототипування, форми.',
+      ],
     },
     {
       id: 2,
-      title: "ThermHex (Німеччина) – нове покоління наповнювачів із сотовою структурою для сендвіч-панелей.",
-      logo: "/img/materials/logo-2.webp",
+      title:
+          'ThermHex (Німеччина) – нове покоління наповнювачів із сотовою структурою для сендвіч-панелей.',
+      logo: '/img/materials/logo-2.webp',
       items: [
-        "Можливість ламінації вуглеволокном або скловолокном.",
-        "Легкі та жорсткі панелі з поліпропілену.",
-        "Термопластичні панелі можуть набувати складних форм.",
-        "Унікальна технологія EconCore з безперервним виробництвом.",
-        "Можливість покриття поверхні майже будь-якою тканиною.",
-        "Зниження ваги конструкції при збереженні міцності.",
-        "Економія сировини та скорочення викидів CO₂."        
-      ]
+        'Можливість ламінації вуглеволокном або скловолокном.',
+        'Легкі та жорсткі панелі з поліпропілену.',
+        'Термопластичні панелі можуть набувати складних форм.',
+        'Унікальна технологія EconCore з безперервним виробництвом.',
+        'Можливість покриття поверхні майже будь-якою тканиною.',
+        'Зниження ваги конструкції при збереженні міцності.',
+        'Економія сировини та скорочення викидів CO₂.',
+      ],
     },
     {
       id: 3,
-      title: "Siltex (Німеччина) – інноваційні плетені матеріали:",
-      logo: "/img/materials/logo-1.webp",
+      title: 'Siltex (Німеччина) – інноваційні плетені матеріали:',
+      logo: '/img/materials/logo-1.webp',
       items: [
-        "Композитні рукави, стрічки, шнури з унікальною плетеною структурою, що надає матеріалам виключну міцність за низької ваги.",
-        "Термопластична матриця із поліаміду, армування вуглеволокном чи скловолокном.",
-        "Застосування: легкі конструкції, захист, ізоляція, композитні вироби, авіація, автомобілебудування."
-      ]
-    }
+        'Композитні рукави, стрічки, шнури з унікальною плетеною структурою, що надає матеріалам виключну міцність за низької ваги.',
+        'Термопластична матриця із поліаміду, армування вуглеволокном чи скловолокном.',
+        'Застосування: легкі конструкції, захист, ізоляція, композитні вироби, авіація, автомобілебудування.',
+      ],
+    },
   ]
 
-  // Throttle function for scroll events
+  // визначаємо брейкпоінт
+  useEffect(() => {
+    const check = () => {
+      if (typeof window === 'undefined') return
+      setIsDesktop(window.innerWidth >= 1024)
+    }
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // throttle
   const throttle = (func: () => void, delay: number) => {
     let timeoutId: NodeJS.Timeout | null = null
     let lastRun = 0
@@ -72,97 +861,70 @@ export function Materials(): JSX.Element {
     }
   }
 
-  // Calculate scroll progress within the section (0 to 1)
+  // прогрес 0..1 всередині секції
   const calculateScrollProgress = () => {
     const section = sectionRef.current
-    if (!section) return 0
+    if (!section || typeof window === 'undefined') return 0
 
     const rect = section.getBoundingClientRect()
     const windowHeight = window.innerHeight
     const sectionHeight = rect.height
-    
-    // Calculate where we are in the scroll journey
-    // pinStart: when the section becomes fully pinned (sectionTop exactly equals sticky top value, which is -50px)
-    // pinEnd: when we need to stop horizontal scrolling (when last card is centered)
-    const sectionTop = rect.top
-    
-    // Only start horizontal scrolling when the section is FULLY pinned
-    // The sticky starts at top:-50px, so we check if sectionTop is <= -50
-    const isPinned = sectionTop <= -50
-    
-    if (!isPinned) {
-      // Section is still entering - no horizontal scroll yet
-      return 0
-    }
 
-    // Calculate how much vertical scrolling distance is available
-    // This is the distance the section can scroll while staying pinned
-    const stickyDistance = sectionHeight - windowHeight // How much room for scrolling while pinned
-    
-    if (stickyDistance <= 0) {
-      return 0
-    }
-    
-    // Calculate how much of the sticky distance has been scrolled
-    // When sectionTop = -50, we're at the start (scrolledPastPin = 0)
-    // When we've scrolled further, scrolledPastPin increases
-    const scrolledPastPin = -50 - sectionTop
-    
-    // Add a "dead zone" at the start - first 10% of scroll is for reading first card
-    // Only the remaining 90% (minus end dead zone) is used for horizontal scrolling
+    const sectionTop = rect.top
+
+    const pinStart = isDesktop ? -50 : 0 // desktop як в оригіналі, моб з top:0
+    const isPinned = sectionTop <= pinStart
+
+    if (!isPinned) return 0
+
+    const stickyDistance = sectionHeight - windowHeight
+    if (stickyDistance <= 0) return 0
+
+    const scrolledPastPin = pinStart - sectionTop
+
     const deadZone = stickyDistance * 0.1
-    
-    if (scrolledPastPin <= deadZone) {
-      // Still in dead zone - first card stays visible
-      return 0
-    }
-    
-    // Check if we're in the end dead zone
+    if (scrolledPastPin <= deadZone) return 0
+
     const endDeadZone = stickyDistance * 0.1
     const maxScrollableDistance = stickyDistance - deadZone - endDeadZone
-    
-    if (scrolledPastPin >= stickyDistance - endDeadZone) {
-      // Reached end dead zone - last card stays visible
-      return 1
-    }
-    
-    // Calculate progress within the scrollable zone only
-    // scrolledPastPin - deadZone gives us how far into scrollable zone we are
+
+    if (scrolledPastPin >= stickyDistance - endDeadZone) return 1
+
     let progress = (scrolledPastPin - deadZone) / maxScrollableDistance
-    
-    // Clamp between 0 and 1
     progress = Math.max(0, Math.min(1, progress))
-    
     return progress
   }
 
-  // Update animations based on scroll progress
+  // оновлення transform + тексту "Крок X/3"
   const updateAnimations = (progress: number) => {
     const stickyInner = stickyInnerRef.current
-    if (!stickyInner) return
+    if (!stickyInner || typeof window === 'undefined') return
 
-    // Find the horizontal container for slides
-    const container = stickyInner.querySelector('.slides-container') as HTMLElement
+    const container = stickyInner.querySelector('.slides-container') as HTMLElement | null
     if (!container) return
 
-    // Calculate translate based on scroll progress
     const windowWidth = window.innerWidth
     const slideCount = slides.length
-    
-    // Compute slide width in px based on SLIDE_VW and center offset
-    const slideWidthPx = windowWidth * (SLIDE_VW / 100)
-    const centerOffset = (windowWidth - slideWidthPx) / 2
 
-    // To center the last slide, we need to scroll (slides.length - 1) slide widths
+    let slideWidthPx: number
+    let centerOffset: number
+
+    if (isDesktop) {
+      // як у веб-версії
+      slideWidthPx = windowWidth * (SLIDE_VW / 100)
+      centerOffset = (windowWidth - slideWidthPx) / 2
+    } else {
+      // мобілка — картка на всю ширину
+      slideWidthPx = windowWidth
+      centerOffset = 0
+    }
+
     const maxTranslate = (slideCount - 1) * slideWidthPx
-    
-    // Progress: 0 = first slide centered, 1 = last slide centered
-    const translateX = centerOffset + (-progress * maxTranslate)
-    
-    container.style.transform = `translateX(${translateX}px)`
-    container.style.transition = 'none' // Disable transitions for smooth scrolling
+    const translateX = centerOffset + -progress * maxTranslate
 
-    // Update step indicator  
+    container.style.transform = `translateX(${translateX}px)`
+    container.style.transition = 'none'
+
     const currentSlide = Math.floor(progress * (slideCount - 1))
     const stepIndicator = stickyInner.querySelector('.step-indicator')
     if (stepIndicator) {
@@ -170,65 +932,54 @@ export function Materials(): JSX.Element {
     }
   }
 
-  // Main scroll handler
+  // main scroll/resize + observer
   useEffect(() => {
     const section = sectionRef.current
-    if (!section) return
+    if (!section || typeof window === 'undefined') return
 
-    // IntersectionObserver: Detect when section enters/leaves viewport
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // Section is considered active when it's mostly visible in viewport
-          isActiveRef.current = entry.isIntersecting && entry.intersectionRatio > 0.3
-          
-          // Start/stop animation loop based on visibility
-          if (isActiveRef.current && rafIdRef.current === null) {
-            const animate = () => {
-              const progress = calculateScrollProgress()
-              setScrollProgress(progress)
-              updateAnimations(progress)
-              
-              if (isActiveRef.current) {
-                rafIdRef.current = requestAnimationFrame(animate)
-              } else {
-                rafIdRef.current = null
+        (entries) => {
+          entries.forEach((entry) => {
+            isActiveRef.current = entry.isIntersecting && entry.intersectionRatio > 0.3
+
+            if (isActiveRef.current && rafIdRef.current === null) {
+              const animate = () => {
+                const progress = calculateScrollProgress()
+                setScrollProgress(progress)
+                updateAnimations(progress)
+
+                if (isActiveRef.current) {
+                  rafIdRef.current = requestAnimationFrame(animate)
+                } else {
+                  rafIdRef.current = null
+                }
               }
+              rafIdRef.current = requestAnimationFrame(animate)
             }
-            rafIdRef.current = requestAnimationFrame(animate)
-          }
-        })
-      },
-      { 
-        threshold: [0, 0.3, 0.5, 0.7, 1.0] // Multiple thresholds for smooth activation
-      }
+          })
+        },
+        { threshold: [0, 0.3, 0.5, 0.7, 1] }
     )
 
     observer.observe(section)
 
-    // Handle scroll events for updating progress
     const handleScroll = throttle(() => {
       const progress = calculateScrollProgress()
       setScrollProgress(progress)
-      
-      // Update animations
       if (rafIdRef.current === null && isActiveRef.current) {
         updateAnimations(progress)
       }
-    }, 16) // ~60fps
+    }, 16)
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    // Handle window resize
     const handleResize = throttle(() => {
       const progress = calculateScrollProgress()
       setScrollProgress(progress)
       updateAnimations(progress)
     }, 100)
 
+    window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleResize)
 
-    // Cleanup
     return () => {
       observer.disconnect()
       window.removeEventListener('scroll', handleScroll)
@@ -239,165 +990,253 @@ export function Materials(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isDesktop])
 
-  // Update animations whenever scrollProgress changes
   useEffect(() => {
     updateAnimations(scrollProgress)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollProgress])
 
   return (
-    <section 
-      id="materials" 
-      ref={sectionRef} 
-      className="relative w-full"
-      style={{ height: `${(slides.length + 1) * 100}vh` }}
-    >
-      {/* Title Section - normal scroll */}
-      <div className="container-1320 px-4 pt-[100px]">
-        <div className="flex items-center gap-3 pb-6">
+      <section
+          id="materials"
+          ref={sectionRef}
+          className="relative w-full bg-white"
+          style={{ height: `${(slides.length + 1) * 100}vh` }}
+      >
+        {/* верхній заголовок — однаковий для всіх брейкпоінтів */}
+        <div className="container-1320 px-4 pt-[60px] lg:pt-[100px]">
+          <div className="flex items-center justify-center gap-3 pb-6">
             <Image
-              src="/img/materials/Icon Title.svg"
-              alt="Materials Icon"
-              width={36}
-              height={36}
-              unoptimized={true}
+                src="/img/materials/Icon Title.svg"
+                alt="Materials Icon"
+                width={36}
+                height={36}
+                unoptimized={true}
             />
-            <h2 
-              className="text-[21px] font-medium leading-[100%] text-center text-[#3B82F6]" 
-              style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}
+            <h2
+                className="text-[19px] lg:text-[21px] font-medium leading-[100%] text-center text-[#3B82F6]"
+                style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}
             >
               Матеріали та напівфабрикати
             </h2>
-            </div>
-            
-            {/* Divider Line */}
-            <div className="w-full border-b border-zinc-200 mb-6"></div>
-            
-            {/* Description Text */}
-            <div className="mb-8 text-center">
-            <p 
-              className="text-lg font-normal leading-[130%] tracking-[0%] text-[#52525B]"
-              style={{ fontFamily: "Roboto Mono, monospace" }}
+          </div>
+
+          <div className="w-full border-b border-zinc-200 mb-6" />
+
+          <div className="mb-6 lg:mb-8 text-center">
+            <p
+                className="text-[14px] lg:text-lg font-normal leading-[130%] text-[#52525B]"
+                style={{ fontFamily: 'Roboto Mono, monospace' }}
             >
-              Ми пропонуємо не просто сировину, а готові технологічні рішення<br />
+              Ми пропонуємо не просто сировину, а готові технологічні рішення
+              <br className="hidden lg:block" />
               для найвибагливіших галузей:
             </p>
+          </div>
         </div>
-      </div>
 
-      {/* Sticky container - only for cards */}
-      <div className="sticky top-[0px] min-h-[calc(100vh-200px)] flex items-start bg-white overflow-hidden pt-[148px] pb-[100px]">
-        <div ref={stickyInnerRef} className="w-full flex flex-col">
-          {/* Scroll-triggered content container */}
-          <div className="relative flex-1 flex items-center w-full">
-            {/* Horizontal scroll wrapper - hides overflow */}
-            <div className="overflow-x-hidden w-full">
-            {/* Horizontal container for all slides */}
-            <div className="slides-container flex" style={{ willChange: 'transform' }}>
-              {slides.map((slide, index) => (
-                <div
-                  key={slide.id}
-                  className="scroll-slide flex-shrink-0"
-                  style={{ width: '56vw' }}
-                >
-                <div className="text-center px-2">
-                  {/* Logo */}
-                  <div className="flex justify-center mb-6">
-                    <Image
-                      src={slide.logo}
-                      alt={`${slide.title} Logo`}
-                      width={210}
-                      height={63}
-                      priority={index === 0}
-                      draggable={false}
-                      className="select-none h-10 w-auto md:h-12"
-                    />
-                  </div>
+        {/* DESKTOP: твоя оригінальна версія */}
+        {isDesktop && (
+            <div className="sticky top-[0px] min-h-[calc(100vh-200px)] flex items-start bg-white overflow-hidden pt-[148px] pb-[100px]">
+              <div ref={stickyInnerRef} className="w-full flex flex-col">
+                <div className="relative flex-1 flex items-center w-full">
+                  <div className="overflow-x-hidden w-full">
+                    <div className="slides-container flex" style={{ willChange: 'transform' }}>
+                      {slides.map((slide, index) => (
+                          <div
+                              key={slide.id}
+                              className="scroll-slide flex-shrink-0"
+                              style={{ width: '56vw' }}
+                          >
+                            <div className="text-center px-2">
+                              <div className="flex justify-center mb-6">
+                                <Image
+                                    src={slide.logo}
+                                    alt={`${slide.title} Logo`}
+                                    width={210}
+                                    height={63}
+                                    priority={index === 0}
+                                    draggable={false}
+                                    className="select-none h-10 w-auto md:h-12"
+                                />
+                              </div>
 
-                  {/* Title */}
-                  <div className="mb-4">
-                    <p 
-                      className="text-center text-lg font-normal leading-[130%] tracking-[0%] text-[#3F3F46]" 
-                      style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
-                    >
-                      {slide.title}
-                    </p>
-                  </div>
+                              <div className="mb-4">
+                                <p
+                                    className="text-center text-lg font-normal leading-[130%] tracking-[0%] text-[#3F3F46]"
+                                    style={{
+                                      fontFamily: "Suisse Intl, system-ui, sans-serif",
+                                    }}
+                                >
+                                  {slide.title}
+                                </p>
+                              </div>
 
-                  {/* Button */}
-                  <div className="flex justify-center  mb-4">
-                    <a
-                      href="#contacts"
-                      className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
-                    >
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat z-10 rounded-full"></div>
-                      <span
-                        className="relative z-20 text-[#3B82F6] group-hover:text-[#2563EB] transition-colors duration-300 font-bold text-base leading-[100%] tracking-[0%]"
-                        style={{ fontFamily: "Roboto Mono, monospace" }}
-                      >
-                        Консультація
-                      </span>
-                    </a>
-                  </div>
+                              <div className="flex justify-center mb-4">
+                                <a
+                                    href="#contacts"
+                                    className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
+                                >
+                                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat z-10 rounded-full" />
+                                  <span
+                                      className="relative z-20 text-[#3B82F6] group-hover:text-[#2563EB] transition-colors duration-300 font-bold text-base leading-[100%] tracking-[0%]"
+                                      style={{ fontFamily: 'Roboto Mono, monospace' }}
+                                  >
+                              Консультація
+                            </span>
+                                </a>
+                              </div>
 
-                  {/* Arrow indicator */}
-                  <div className="flex justify-center  ">
-                    <Image
-                      src="/img/materials/Group Arrows.svg"
-                      alt="Group Arrows"
-                      width={12}
-                      height={64}
-                      
-                    />
-                  </div>
+                              <div className="flex justify-center">
+                                <Image
+                                    src="/img/materials/Group Arrows.svg"
+                                    alt="Group Arrows"
+                                    width={12}
+                                    height={64}
+                                />
+                              </div>
 
-                  {/* Materials List */}
-                  <div className="max-w-[698px] mx-auto my-4">
-                    <div className="custom-corner-border bg-white p-8">
-                      <div className="space-y-4">
-                        {slide.items.map((item, itemIndex) => (
-                          <div key={itemIndex} className="flex items-start gap-4">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
-                            <div className="flex-1">
-                              <p
-                                className="text-base font-normal tracking-[0%] text-[#71717A] text-left"
-                                style={{ fontFamily: "Roboto Mono, monospace" }}
-                              >
-                                {item}
-                              </p>
+                              <div className="max-w-[698px] mx-auto my-4">
+                                <div className="custom-corner-border bg-white p-8">
+                                  <div className="space-y-4">
+                                    {slide.items.map((item, itemIndex) => (
+                                        <div key={itemIndex} className="flex items-start gap-4">
+                                          <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+                                          <div className="flex-1">
+                                            <p
+                                                className="text-base font-normal tracking-[0%] text-[#71717A] text-left"
+                                                style={{ fontFamily: 'Roboto Mono, monospace' }}
+                                            >
+                                              {item}
+                                            </p>
+                                          </div>
+                                        </div>
+                                    ))}
+                                  </div>
+                                  <span className="corner-bl" />
+                                  <span className="corner-br" />
+                                  <span className="bottom-line" />
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                      <span className="corner-bl"></span>
-                      <span className="corner-br"></span>
-                      <span className="bottom-line"></span>
+                      ))}
                     </div>
                   </div>
                 </div>
+
+                <div className="container-1320 px-4">
+                  <div className="flex justify-center mt-8">
+                <span
+                    className="step-indicator px-4 py-2 rounded-full text-lg font-normal leading-[100%] tracking-[0%] text-center text-[#A1A1AA]"
+                    style={{ fontFamily: 'Roboto Mono, monospace' }}
+                >
+                  Крок 1/{slides.length}
+                </span>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
+        )}
+
+        {/* MOBILE: горизонтальне гортання + вертикальне центрування */}
+        {!isDesktop && (
+            <div className="sticky top-0 bg-white">
+              <div
+                  ref={stickyInnerRef}
+                  className="w-full flex flex-col justify-center min-h-[calc(100vh-120px)] pb-4"
+              >
+                <div className="relative flex-1 flex items-center w-full">
+                  <div className="overflow-x-hidden w-full">
+                    <div className="slides-container flex" style={{ willChange: 'transform' }}>
+                      {slides.map((slide, index) => (
+                          <div key={slide.id} className="scroll-slide flex-shrink-0 w-full px-4">
+                            <div className="max-w-[430px] mx-auto text-center">
+                              <div className="flex justify-center mb-5">
+                                <Image
+                                    src={slide.logo}
+                                    alt={`${slide.title} Logo`}
+                                    width={210}
+                                    height={63}
+                                    priority={index === 0}
+                                    draggable={false}
+                                    className="select-none h-10 w-auto"
+                                />
+                              </div>
+
+                              <p
+                                  className="text-[14px] font-normal leading-[130%] text-[#3F3F46] mb-5"
+                                  style={{ fontFamily: 'Suisse Intl, system-ui, sans-serif' }}
+                              >
+                                {slide.title}
+                              </p>
+
+                              <div className="flex justify-center mb-5">
+                                <a
+                                    href="#contacts"
+                                    className="relative font-mono font-medium text-base leading-[130%] group flex items-center justify-center pt-[15px] pr-9 pb-4 pl-9 bg-[url('/img/btn/Button-def.webp')] bg-contain bg-center bg-no-repeat select-none z-20 w-[188px] h-[52px] rounded-full"
+                                >
+                                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[url('/img/btn/Button-hover.webp')] bg-contain bg-center bg-no-repeat z-10 rounded-full" />
+                                  <span
+                                      className="relative z-20 text-[#3B82F6] group-hover:text-[#2563EB] transition-colors duration-300 font-bold text-base leading-[100%] tracking-[0%]"
+                                      style={{ fontFamily: 'Roboto Mono, monospace' }}
+                                  >
+                              Консультація
+                            </span>
+                                </a>
+                              </div>
+
+                              <div className="flex justify-center mb-5">
+                                <Image
+                                    src="/img/materials/Group Arrows.svg"
+                                    alt="Group Arrows"
+                                    width={12}
+                                    height={64}
+                                />
+                              </div>
+
+                              <div className="max-w-[698px] mx-auto">
+                                <div className="custom-corner-border bg-white p-5">
+                                  <div className="space-y-4">
+                                    {slide.items.map((item, itemIndex) => (
+                                        <div key={itemIndex} className="flex items-start gap-3">
+                                          <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2" />
+                                          <p
+                                              className="text-[14px] font-normal leading-[130%] text-left text-[#71717A]"
+                                              style={{ fontFamily: 'Roboto Mono, monospace' }}
+                                          >
+                                            {item}
+                                          </p>
+                                        </div>
+                                    ))}
+                                  </div>
+                                  <span className="corner-bl" />
+                                  <span className="corner-br" />
+                                  <span className="bottom-line" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* крок ближче до карти, без величезної білої дірки */}
+                <div className="container-1320 px-4">
+                  <div className="flex justify-center mt-5 mb-2">
+                <span
+                    className="step-indicator px-4 py-2 rounded-full text-[14px] font-normal leading-[100%] text-center text-[#A1A1AA]"
+                    style={{ fontFamily: 'Roboto Mono, monospace' }}
+                >
+                  Крок 1/{slides.length}
+                </span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Step indicator */}
-          <div className="container-1320 px-4">
-          <div className="flex justify-center mt-8">
-            <span
-              className="step-indicator px-4 py-2 rounded-full text-lg font-normal leading-[100%] tracking-[0%] text-center text-[#A1A1AA]"
-              style={{ fontFamily: "Roboto Mono, monospace" }}
-            >
-              Крок 1/{slides.length}
-            </span>
-          </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
+        )}
+      </section>
   )
 }
-

@@ -246,3 +246,19 @@ body {
 .marquee-infinite:hover {
   animation-play-state: paused;
 }
+
+
+/* Контактна форма — фон для веб / моб */
+.contact-form-bg {
+  background-image: url("/../img/contacts/Stroke Form.png"); /* десктоп */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #ffffff;
+}
+
+@media (max-width: 1023.98px) {
+  .contact-form-bg {
+    background-image: url("/../img/contacts/form_bg_mob.png"); /* мобільна версія */
+  }
+}
