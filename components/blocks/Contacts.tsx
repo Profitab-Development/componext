@@ -326,12 +326,12 @@ export const Contacts = memo(() => {
                 style={{
                   fontFamily: 'Roboto Mono, monospace',
                   fontWeight: 400,
-                  fontSize: '17px',
+                  fontSize: '16px',
                   lineHeight: '100%',
                   letterSpacing: '0%',
                 }}
               >
-                Номер
+                +380983800400
               </span>
             </div>
             <Image
@@ -363,12 +363,12 @@ export const Contacts = memo(() => {
                 style={{
                   fontFamily: 'Roboto Mono, monospace',
                   fontWeight: 400,
-                  fontSize: '17px',
+                  fontSize: '16px',
                   lineHeight: '100%',
                   letterSpacing: '0%',
                 }}
               >
-                 Пошта
+                 info@componext.com.ua
               </span>
             </div>
             <Image
@@ -402,7 +402,7 @@ export const Contacts = memo(() => {
                 style={{
                   fontFamily: 'Roboto Mono, monospace',
                   fontWeight: 400,
-                  fontSize: '17px',
+                  fontSize: '16px',
                   lineHeight: '100%',
                   letterSpacing: '0%',
                 }}
@@ -441,7 +441,7 @@ export const Contacts = memo(() => {
                 style={{
                   fontFamily: 'Roboto Mono, monospace',
                   fontWeight: 400,
-                  fontSize: '17px',
+                  fontSize: '16px',
                   lineHeight: '100%',
                   letterSpacing: '0%',
                 }}
