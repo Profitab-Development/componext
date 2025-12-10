@@ -331,7 +331,7 @@ export const Contacts = memo(() => {
                   letterSpacing: '0%',
                 }}
               >
-                Номер телефону
+                Номер
               </span>
             </div>
             <Image
@@ -368,7 +368,7 @@ export const Contacts = memo(() => {
                   letterSpacing: '0%',
                 }}
               >
-                Електронна пошта
+                 Пошта
               </span>
             </div>
             <Image
