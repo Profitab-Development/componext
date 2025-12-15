@@ -571,12 +571,12 @@ export function ContactForm() {
               className="relative w-full max-w-[900px] mx-auto px-4 py-10 lg:p-8 flex flex-col gap-10 contact-form-bg"
           >
             <div className="relative z-20">
-              <h4
+              <p
                   className="text-[26px] font-medium text-[#3F3F46] leading-none text-center"
                   style={{ fontFamily: "Suisse Int'l, system-ui, sans-serif" }}
               >
                 Форма зворотного звʼязку
-              </h4>
+              </p>
             </div>
 
             <form
